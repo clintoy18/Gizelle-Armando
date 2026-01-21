@@ -1,139 +1,107 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Section } from '../components/common';
 
-const timeline = [
-  {
-    date: 'January 2020',
-    title: 'We First Met',
-    description: 'Our paths crossed for the first time, and little did we know it would be the start of something beautiful.',
-    image: 'https://images.unsplash.com/photo-1516589174184-c68526674fd6?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    date: 'March 2020',
-    title: 'First Date',
-    description: 'Our first date was magical. We talked for hours and knew there was something special between us.',
-    image: 'https://images.unsplash.com/photo-1522673607200-1648832cee98?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    date: 'December 2021',
-    title: 'He Said "I Love You"',
-    description: 'Those three little words changed everything. Our love grew stronger with each passing day.',
-    image: 'https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    date: 'February 2024',
-    title: 'The Proposal',
-    description: 'Under the stars, he got down on one knee and asked the question that would change our lives forever.',
-    image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1000&auto=format&fit=crop'
-  },
+const weddingPhotos = [
+  "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800",
+  "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800",
+  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800",
+  "https://images.unsplash.com/photo-1465495910483-34a1730c0953?q=80&w=800",
+  "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800",
 ];
 
 export function OurStoryPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const [galleryWidth, setGalleryWidth] = useState(0);
 
-  const nextStory = () => setCurrentIndex((prev) => (prev + 1) % timeline.length);
-  const prevStory = () => setCurrentIndex((prev) => (prev - 1 + timeline.length) % timeline.length);
-
-  // Auto-slide logic
+  // Calculate gallery width dynamically on mount and resize
   useEffect(() => {
-    if (isPaused) return; // Stop timer if user is hovering
+    const calculateWidth = () => {
+      if (galleryRef.current) {
+        setGalleryWidth(galleryRef.current.scrollWidth / 2);
+      }
+    };
 
-    const timer = setInterval(() => {
-      nextStory();
-    }, 5000); // Changes slide every 5 seconds
-
-    return () => clearInterval(timer); // Cleanup on unmount
-  }, [currentIndex, isPaused]);
+    calculateWidth();
+    window.addEventListener('resize', calculateWidth);
+    return () => window.removeEventListener('resize', calculateWidth);
+  }, []);
 
   return (
-    <Section bgColor="cream" className="text-center min-h-screen flex flex-col justify-center">
-      <div className="max-w-5xl mx-auto px-4 w-full">
+    <Section
+      bgColor="cream"
+      className="pt-24 pb-0 overflow-hidden min-h-screen flex flex-col justify-between"
+    >
         
-        <header className="mb-12">
-          <h2 className="text-4xl md:text-5xl mb-2" style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))' }}>
-            Our Story
-          </h2>
-          <div className="h-px w-20 bg-champagne mx-auto mb-4" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
-        </header>
+      {/* Scripture Header */}
+      <motion.div 
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 1.2, ease: "easeOut" }}
+  className="flex flex-col items-center text-center px-4 sm:px-6 max-w-3xl mx-auto mb-12 md:mb-16"
+>
+  {/* Scripture */}
+  <span
+    className="block text-[10px] sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] mb-2 sm:mb-4"
+    style={{ color: 'hsl(var(--wedding-champagne))', fontFamily: "'Lora', serif" }}
+  >
+    Proverbs 18:22
+  </span>
 
-        <div 
-          className="relative bg-white/50 backdrop-blur-sm rounded-lg overflow-hidden shadow-xl min-h-[500px] flex flex-col md:flex-row"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+  {/* Heading */}
+  <h2
+    className="text-base sm:text-lg md:text-2xl lg:text-4xl xl:text-5xl italic leading-snug sm:leading-relaxed mb-4 sm:mb-6"
+    style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))' }}
+  >
+    "He who finds a wife finds what is good and receives favor from the Lord."
+  </h2>
+
+  {/* Decorative Divider */}
+  <div className="flex justify-center items-center gap-2 sm:gap-4">
+    <div className="h-px w-6 sm:w-16 bg-stone-300" />
+    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-stone-300" />
+    <div className="h-px w-6 sm:w-16 bg-stone-300" />
+  </div>
+</motion.div>
+
+
+      {/* Infinite Sliding Photo Gallery */}
+      <div className="relative mt-12 sm:mt-20 mb-10 w-full overflow-hidden">
+        <motion.div 
+          className="flex gap-3 sm:gap-4 px-2 sm:px-4"
+          ref={galleryRef}
+          animate={{ x: [-galleryWidth, 0] }}
+          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+          style={{ width: 'fit-content' }}
         >
-          
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={currentIndex}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="flex flex-col md:flex-row w-full"
+          {[...weddingPhotos, ...weddingPhotos].map((src, index) => (
+            <div 
+              key={index} 
+              className="flex-shrink-0 w-48 sm:w-64 md:w-80 h-60 sm:h-80 md:h-[450px] rounded-sm overflow-hidden shadow-md"
             >
-              {/* Image Side */}
-              <div className="w-full md:w-1/2 h-64 md:h-[500px] overflow-hidden">
-                <motion.img 
-                  initial={{ scale: 1.1 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 3 }}
-                  src={timeline[currentIndex].image} 
-                  alt={timeline[currentIndex].title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Text Side */}
-              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center text-left">
-                <p className="text-sm uppercase tracking-widest mb-4" style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-champagne))' }}>
-                  {timeline[currentIndex].date}
-                </p>
-                <h3 className="text-3xl md:text-4xl mb-6" style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))' }}>
-                  {timeline[currentIndex].title}
-                </h3>
-                <p className="text-lg leading-relaxed" style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-brown-light))' }}>
-                  {timeline[currentIndex].description}
-                </p>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Navigation Controls */}
-          <div className="absolute bottom-6 right-6 flex gap-4 z-10">
-            <button 
-              onClick={(e) => { e.stopPropagation(); prevStory(); }}
-              className="p-3 rounded-full border border-champagne bg-white/80 hover:bg-white transition-colors"
-              style={{ borderColor: 'hsl(var(--wedding-champagne))' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button 
-              onClick={(e) => { e.stopPropagation(); nextStory(); }}
-              className="p-3 rounded-full border border-champagne bg-white/80 hover:bg-white transition-colors"
-              style={{ borderColor: 'hsl(var(--wedding-champagne))' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Pagination Dots */}
-        <div className="mt-8 flex justify-center gap-3">
-          {timeline.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className="group relative h-4 w-8 flex items-center justify-center"
-            >
-              <div 
-                className={`h-1 transition-all duration-500 rounded-full ${idx === currentIndex ? 'w-8' : 'w-2'}`}
-                style={{ backgroundColor: idx === currentIndex ? 'hsl(var(--wedding-brown))' : 'hsl(var(--wedding-champagne) / 0.5)' }}
+              <img 
+                src={src} 
+                alt={`Wedding moment ${index}`} 
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
               />
-            </button>
+            </div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* Gradient overlays */}
+        <div className="absolute inset-y-0 left-0 w-12 sm:w-20 bg-gradient-to-r from-yellow-50 to-transparent z-10" />
+        <div className="absolute inset-y-0 right-0 w-12 sm:w-20 bg-gradient-to-l from-yellow-50 to-transparent z-10" />
+      </div>
+
+      {/* Footer Text */}
+      <div className="text-center pb-12 px-4 sm:px-6">
+        <p 
+          className="text-base sm:text-lg opacity-60 italic"
+          style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-brown))' }}
+        >
+          Scroll to see our journey
+        </p>
       </div>
     </Section>
   );
