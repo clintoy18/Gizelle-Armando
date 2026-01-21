@@ -6,54 +6,94 @@ interface IntroProps {
 
 export function Intro({ onComplete }: IntroProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     // Add Google Fonts for wedding typography
     const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes:wght@400&family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
+    };
   }, []);
 
   const handleClick = () => {
-    setIsVisible(false);
+    setIsExiting(true);
     setTimeout(() => {
+      setIsVisible(false);
       onComplete();
-    }, 500);
+    }, 600);
   };
 
   if (!isVisible) return null;
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-gradient-to-b from-white via-amber-50 to-white cursor-pointer transition-opacity duration-500 flex items-center justify-center overflow-hidden"
+      className={`fixed inset-0 z-[100] cursor-pointer flex items-center justify-center overflow-hidden transition-opacity duration-500 ${isExiting ? 'opacity-0' : 'opacity-100'}`}
+      style={{
+        background: 'linear-gradient(180deg, hsl(var(--wedding-cream)) 0%, hsl(var(--wedding-tulle)) 50%, hsl(var(--wedding-cream)) 100%)',
+      }}
       onClick={handleClick}
     >
       {/* Decorative background elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-amber-100 rounded-full opacity-20 blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-40 h-40 bg-amber-50 rounded-full opacity-20 blur-3xl"></div>
+      <div 
+        className="absolute top-[10%] left-[10%] w-64 h-64 rounded-full blur-3xl animate-float"
+        style={{ backgroundColor: 'hsl(var(--wedding-champagne) / 0.15)' }}
+      />
+      <div 
+        className="absolute bottom-[10%] right-[10%] w-80 h-80 rounded-full blur-3xl animate-float-delayed"
+        style={{ backgroundColor: 'hsl(var(--wedding-brown) / 0.08)' }}
+      />
+      <div 
+        className="absolute top-[40%] right-[20%] w-48 h-48 rounded-full blur-3xl animate-float"
+        style={{ backgroundColor: 'hsl(var(--wedding-champagne) / 0.1)' }}
+      />
 
-      <div className="text-center space-y-8 px-6 relative z-10">
+      {/* Main content */}
+      <div className="text-center space-y-8 px-6 relative z-10 animate-fade-in">
         {/* Main Names */}
         <div className="space-y-6">
           <h1 
-            className="text-7xl md:text-8xl font-bold text-amber-900 transition-all duration-1000 animate-fade-in"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            className="text-6xl md:text-8xl font-bold transition-all duration-1000"
+            style={{ 
+              fontFamily: "'Playfair Display', serif",
+              color: 'hsl(var(--wedding-brown))',
+              textShadow: '0 2px 4px hsl(var(--wedding-brown) / 0.1)'
+            }}
           >
             Armando
           </h1>
           
           <div className="flex items-center justify-center gap-4">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-700"></div>
-            <span className="text-3xl md:text-4xl text-amber-700" style={{ fontFamily: "'Great Vibes', cursive" }}>
+            <div 
+              className="h-px w-16 md:w-24"
+              style={{ background: 'linear-gradient(to right, transparent, hsl(var(--wedding-champagne)))' }}
+            />
+            <span 
+              className="text-4xl md:text-5xl"
+              style={{ 
+                fontFamily: "'Great Vibes', cursive",
+                color: 'hsl(var(--wedding-champagne))'
+              }}
+            >
               &
             </span>
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-700"></div>
+            <div 
+              className="h-px w-16 md:w-24"
+              style={{ background: 'linear-gradient(to left, transparent, hsl(var(--wedding-champagne)))' }}
+            />
           </div>
 
           <h2 
-            className="text-6xl md:text-7xl font-bold text-amber-900 transition-all duration-1000 animate-fade-in"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            className="text-6xl md:text-8xl font-bold transition-all duration-1000"
+            style={{ 
+              fontFamily: "'Playfair Display', serif",
+              color: 'hsl(var(--wedding-brown))',
+              textShadow: '0 2px 4px hsl(var(--wedding-brown) / 0.1)'
+            }}
           >
             Gee
           </h2>
@@ -61,14 +101,23 @@ export function Intro({ onComplete }: IntroProps) {
 
         {/* Subtitle */}
         <p 
-          className="text-xl md:text-2xl text-amber-700 font-light tracking-wide"
-          style={{ fontFamily: "'Lora', serif" }}
+          className="text-xl md:text-2xl font-light tracking-wide"
+          style={{ 
+            fontFamily: "'Lora', serif",
+            color: 'hsl(var(--wedding-champagne))'
+          }}
         >
           Together we celebrate love
         </p>
 
         {/* Click instruction */}
-        <div className="pt-8 text-amber-600 text-sm md:text-base animate-pulse" style={{ fontFamily: "'Lora', serif" }}>
+        <div 
+          className="pt-8 text-sm md:text-base animate-pulse"
+          style={{ 
+            fontFamily: "'Lora', serif",
+            color: 'hsl(var(--wedding-champagne) / 0.8)'
+          }}
+        >
           Click anywhere to continue
         </div>
       </div>
