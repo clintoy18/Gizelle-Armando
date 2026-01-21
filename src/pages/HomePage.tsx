@@ -2,8 +2,23 @@ import { Section } from '../components/common';
 
 export function HomePage() {
   return (
-    <Section id="home-content" bgColor="white" className="text-center">
-      <div className="max-w-3xl mx-auto">
+    <Section 
+      id="home-content" 
+      className="relative text-center min-h-screen flex items-center justify-center overflow-hidden"
+      style={{
+        // Replace with your actual image path
+        backgroundImage: "url('/path-to-your-couple-photo.jpg')", 
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Overlay to ensure text readability */}
+      <div 
+        className="absolute inset-0 bg-black/30" 
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.4)' }} // Optional: Light overlay if the photo is dark
+      />
+
+      <div className="relative z-10 max-w-3xl mx-auto px-4">
         <p 
           className="text-lg md:text-xl mb-8"
           style={{ 
@@ -14,7 +29,7 @@ export function HomePage() {
           We joyfully invite you to celebrate
         </p>
         <h2 
-          className="text-4xl md:text-6xl mb-6"
+          className="text-5xl md:text-7xl mb-6"
           style={{ 
             fontFamily: "'Playfair Display', serif",
             color: 'hsl(var(--wedding-brown))'
@@ -22,12 +37,11 @@ export function HomePage() {
         >
           Our Wedding Day
         </h2>
-        <div 
-          className="flex items-center justify-center gap-4 mb-8"
-        >
-          <div className="h-px w-16 md:w-24" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
+        
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-12 md:w-20" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
           <span 
-            className="text-3xl"
+            className="text-4xl md:text-5xl"
             style={{ 
               fontFamily: "'Great Vibes', cursive",
               color: 'hsl(var(--wedding-champagne))'
@@ -35,10 +49,11 @@ export function HomePage() {
           >
             Save the Date
           </span>
-          <div className="h-px w-16 md:w-24" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
+          <div className="h-px w-12 md:w-20" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
         </div>
+
         <p 
-          className="text-2xl md:text-3xl font-light mb-4"
+          className="text-2xl md:text-4xl font-light mb-4"
           style={{ 
             fontFamily: "'Playfair Display', serif",
             color: 'hsl(var(--wedding-brown))'
@@ -47,7 +62,7 @@ export function HomePage() {
           December 15, 2025
         </p>
         <p 
-          className="text-lg"
+          className="text-xl"
           style={{ 
             fontFamily: "'Lora', serif",
             color: 'hsl(var(--wedding-champagne))'
