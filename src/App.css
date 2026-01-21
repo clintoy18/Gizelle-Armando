@@ -1,0 +1,8 @@
+/* App styles - Tailwind handles most styling */
+
+/* Smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional: Add any global app-specific styles here */
