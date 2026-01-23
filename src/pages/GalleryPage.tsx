@@ -1,12 +1,12 @@
 import { Section } from '../components/common';
 
 const photos = [
-  { id: 1, alt: 'Couple photo 1' },
-  { id: 2, alt: 'Couple photo 2' },
-  { id: 3, alt: 'Couple photo 3' },
-  { id: 4, alt: 'Couple photo 4' },
-  { id: 5, alt: 'Couple photo 5' },
-  { id: 6, alt: 'Couple photo 6' },
+  { id: 1, src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80', alt: 'Couple photo 1' },
+  { id: 2, src: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', alt: 'Couple photo 2' },
+  { id: 3, src: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80', alt: 'Couple photo 3' },
+  { id: 4, src: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', alt: 'Couple photo 4' },
+  { id: 5, src: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80', alt: 'Couple photo 5' },
+  { id: 6, src: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80', alt: 'Couple photo 6' },
 ];
 
 export function GalleryPage() {
@@ -38,20 +38,11 @@ export function GalleryPage() {
             className="aspect-square rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-105"
             style={{ backgroundColor: 'hsl(var(--wedding-cream))' }}
           >
-            <div 
-              className="w-full h-full flex items-center justify-center"
-              style={{ backgroundColor: 'hsl(var(--wedding-champagne) / 0.1)' }}
-            >
-              <span 
-                className="text-sm"
-                style={{ 
-                  fontFamily: "'Lora', serif",
-                  color: 'hsl(var(--wedding-champagne))'
-                }}
-              >
-                Photo {photo.id}
-              </span>
-            </div>
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              className="w-full h-full object-cover"
+            />
           </div>
         ))}
       </div>
@@ -63,7 +54,6 @@ export function GalleryPage() {
           color: 'hsl(var(--wedding-champagne))'
         }}
       >
-        Upload your photos to personalize your gallery
       </p>
     </Section>
   );
