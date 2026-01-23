@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 import { Header, Footer } from './components/layout';
@@ -14,28 +14,37 @@ import {
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // If intro is showing, render ONLY intro
-  if (showIntro) {
-    return <Intro onComplete={() => setShowIntro(false)} />;
-  }
+  // Play audio only when intro is done
+  useEffect(() => {
+    if (!showIntro && audioRef.current) {
+      audioRef.current.volume = 1;
+      audioRef.current.loop = true;
+      audioRef.current.play().catch((err) => console.log('Audio play failed:', err));
+    }
+  }, [showIntro]);
 
-  // Otherwise render the full site
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <Header />
+      {/* Only play audio after intro */}
+      <audio ref={audioRef} src="/music/wedding-song.mp3" />
 
-      <main className="flex-1">
+      {showIntro && <Intro onComplete={() => setShowIntro(false)} />}
 
-        <div id="home"><HomePage /></div>
-        <div id="story"><OurStoryPage /></div>
-        <div id="events"><EventDetailsPage /></div>
-        <div id="gallery"><GalleryPage /></div>
-        <div id="rsvp"><RSVPPage /></div>
-        {/* <div id="contact"><ContactPage /></div> */}
-      </main>
-
-      <Footer />
+      {!showIntro && (
+        <>
+          <Header />
+          <main className="flex-1">
+            <div id="home"><HomePage /></div>
+            <div id="story"><OurStoryPage /></div>
+            <div id="events"><EventDetailsPage /></div>
+            <div id="gallery"><GalleryPage /></div>
+            <div id="rsvp"><RSVPPage /></div>
+          </main>
+          <Footer />
+        </>
+      )}
     </div>
   );
 }
