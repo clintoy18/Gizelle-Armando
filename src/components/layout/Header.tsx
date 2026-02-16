@@ -18,12 +18,21 @@ export function Header() {
     { href: '#events', label: 'Events' },
     { href: '#gallery', label: 'Gallery' },
     { href: '#rsvp', label: 'RSVP' },
-    // { href: '#contact', label: 'Contact' },
   ];
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    if (element) {
+      // ✅ Account for header height when scrolling
+      const headerHeight = 80; // Approximate header height
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
     setIsMobileMenuOpen(false);
   };
 
@@ -37,14 +46,15 @@ export function Header() {
       style={{ 
         backgroundColor: isScrolled 
           ? 'hsl(var(--wedding-cream))' 
-          : 'transparent',
+          : 'hsl(var(--wedding-cream) / 0.95)', // ✅ Always have slight background
+        backdropFilter: 'blur(8px)' // ✅ Add blur for elegance
       }}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <a 
-          href="#intro" 
-          onClick={(e) => { e.preventDefault(); scrollToSection('#intro'); }}
-          className="text-2xl md:text-3xl"
+          href="#home" 
+          onClick={(e) => { e.preventDefault(); scrollToSection('#home'); }}
+          className="text-2xl md:text-3xl transition-opacity hover:opacity-70"
           style={{ 
             fontFamily: "'Great Vibes', cursive",
             color: 'hsl(var(--wedding-brown))'
@@ -60,10 +70,11 @@ export function Header() {
               key={link.href}
               href={link.href}
               onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-              className="text-sm tracking-wide transition-colors hover:opacity-70"
+              className="text-sm tracking-wide transition-colors hover:opacity-70 uppercase"
               style={{ 
                 fontFamily: "'Lora', serif",
-                color: 'hsl(var(--wedding-brown))'
+                color: 'hsl(var(--wedding-brown))',
+                letterSpacing: '0.1em'
               }}
             >
               {link.label}
@@ -73,8 +84,9 @@ export function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2"
+          className="md:hidden p-2 transition-opacity hover:opacity-70"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
           style={{ color: 'hsl(var(--wedding-brown))' }}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,8 +102,11 @@ export function Header() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div 
-          className="md:hidden absolute top-full left-0 right-0 py-4 shadow-lg"
-          style={{ backgroundColor: 'hsl(var(--wedding-cream))' }}
+          className="md:hidden absolute top-full left-0 right-0 py-4 shadow-lg border-t"
+          style={{ 
+            backgroundColor: 'hsl(var(--wedding-cream))',
+            borderColor: 'hsl(var(--wedding-brown) / 0.1)'
+          }}
         >
           <nav className="flex flex-col items-center gap-4">
             {navLinks.map((link) => (
@@ -99,10 +114,11 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-                className="text-sm tracking-wide"
+                className="text-sm tracking-wide uppercase transition-opacity hover:opacity-70"
                 style={{ 
                   fontFamily: "'Lora', serif",
-                  color: 'hsl(var(--wedding-brown))'
+                  color: 'hsl(var(--wedding-brown))',
+                  letterSpacing: '0.1em'
                 }}
               >
                 {link.label}
