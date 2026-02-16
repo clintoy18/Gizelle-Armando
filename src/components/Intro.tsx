@@ -1,92 +1,133 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface IntroProps {
   onComplete: () => void;
 }
 
 export function Intro({ onComplete }: IntroProps) {
-  const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap';
-    link.rel = 'stylesheet';
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;500&display=swap";
+    link.rel = "stylesheet";
     document.head.appendChild(link);
-    return () => { document.head.removeChild(link); };
+    return () => {
+      document.head.removeChild(link);
+    };
   }, []);
 
-  const handleClick = () => {
+  const handleStart = () => {
     setIsExiting(true);
     setTimeout(() => {
       setIsVisible(false);
       onComplete();
-    }, 1000);
+    }, 1200);
   };
 
   if (!isVisible) return null;
 
-  // New Color Constants (Beige-Brown Palette)
   const colors = {
-    bgLight: '#F5F2ED',    // Soft Beige/Cream
-    bgWarm: '#E8E2D9',     // Warm Sand
-    textBrown: '#5C4B40',  // Rich Earthy Brown
-    accentGold: '#A68D76', // Muted Taupe/Beige
+    paper: "#FBFBF9",
+    ink: "#2D2926",
+    gold: "#BFAF80",
   };
 
   return (
-    <div 
-      className={`fixed inset-0 z-[100] cursor-pointer flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${isExiting ? 'opacity-0' : 'opacity-100'}`}
-      style={{
-        // Gradient changed from pink-tones to a soft beige transition
-        background: `linear-gradient(180deg, ${colors.bgLight} 0%, ${colors.bgWarm} 50%, ${colors.bgLight} 100%)`,
-      }}
-      onClick={handleClick}
+    <div
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-between py-16 px-6 cursor-pointer transition-all duration-1000 ease-in-out
+        ${isExiting ? "translate-y-[-100%] opacity-0" : "translate-y-0 opacity-100"}`}
+      style={{ backgroundColor: colors.paper }}
+      onClick={handleStart}
     >
-      <audio ref={audioRef} src="/music/wedding-song.mp3" />
-
-      {/* Refined Background Elements - Using Taupe and Sand blur circles */}
-      <div className="absolute top-[10%] left-[10%] w-64 h-64 rounded-full blur-3xl animate-float opacity-30" 
-           style={{ backgroundColor: colors.accentGold }} />
-      <div className="absolute bottom-[15%] right-[5%] w-96 h-96 rounded-full blur-3xl animate-float-delayed opacity-20" 
-           style={{ backgroundColor: colors.textBrown }} />
-
-      {/* Main content */}
-      <div className="text-center space-y-10 px-6 relative z-10 animate-fade-in">
-        <div className="space-y-4">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight" 
-              style={{ fontFamily: "'Playfair Display', serif", color: colors.textBrown }}>
-            Armando
-          </h1>
-          
-          <div className="flex items-center justify-center gap-6">
-            <div className="h-px w-12 md:w-20" style={{ backgroundColor: colors.accentGold, opacity: 0.5 }} />
-            <span className="text-5xl md:text-6xl italic" 
-                  style={{ fontFamily: "'Great Vibes', cursive", color: colors.accentGold }}>
-              &
-            </span>
-            <div className="h-px w-12 md:w-20" style={{ backgroundColor: colors.accentGold, opacity: 0.5 }} />
-          </div>
-
-          <h2 className="text-6xl md:text-8xl font-bold tracking-tight" 
-              style={{ fontFamily: "'Playfair Display', serif", color: colors.textBrown }}>
-            Gee
-          </h2>
-        </div>
-
-        <p className="text-lg md:text-xl font-medium tracking-[0.2em] uppercase" 
-           style={{ fontFamily: "'Lora', serif", color: colors.accentGold }}>
-          Together we celebrate love
+      {/* 1. Top Detail (Floating Anchor) */}
+      <div className="w-full text-center">
+        <p
+          className="text-[12px] sm:text-sm tracking-[0.4em] uppercase opacity-60"
+          style={{ fontFamily: "'Lora', serif", color: colors.ink }}
+        >
+          Est. April 2026
         </p>
+      </div>
 
-        <div className="pt-12">
-          <span className="text-xs md:text-sm tracking-widest uppercase animate-pulse opacity-60" 
-                style={{ fontFamily: "'Lora', serif", color: colors.textBrown }}>
-            Click to enter
+      {/* 2. Main Content (Centered) */}
+      <div className="relative z-10 w-full text-center flex flex-col items-center justify-center">
+        {/* Name 1 - Large, Bold, Command Presence */}
+        <h1
+          className="text-[clamp(5rem,20vw,14rem)] font-semibold leading-[0.9] tracking-tight animate-fade-in-up"
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            color: colors.ink,
+          }}
+        >
+          Armando
+        </h1>
+
+        {/* Separator - Elegant Italic Ampersand */}
+        <div className="py-2 md:py-4 animate-fade-in opacity-40">
+          <span
+            className="text-[clamp(4rem,12vw,7rem)] italic"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: colors.gold,
+            }}
+          >
+            &  
           </span>
         </div>
+
+        {/* Name 2 - Matching Scale */}
+        <h1
+          className="text-[clamp(5rem,20vw,14rem)] font-semibold leading-[0.9] tracking-tight animate-fade-in-up delay-200"
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            color: colors.ink,
+          }}
+        >
+          Gee
+        </h1>
+
+        {/* Entry Prompt - Large enough to be the clear instruction */}
+        <div className="mt-16 md:mt-24">
+          <p
+            className="text-[clamp(1.5rem,5vw,2rem)] tracking-[0.3em] uppercase opacity-60 animate-pulse"
+            style={{
+              fontFamily: "'Lora', serif",
+              color: colors.ink,
+            }}
+          >
+            Tap to enter
+          </p>
+        </div>
       </div>
+
+      {/* 3. Footer (Interaction area) */}
+      <div className="w-full text-center space-y-8">
+        <div className="space-y-2">
+          <p
+            className="text-[12px] sm:text-sm tracking-[0.3em] uppercase"
+            style={{ fontFamily: "'Lora', serif", color: colors.gold }}
+          >
+            The Celebration Begins
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center gap-3">
+          <span
+            className="text-[11px] tracking-[0.5em] uppercase opacity-40 animate-pulse"
+            style={{ color: colors.ink }}
+          >
+            Tap to Open
+          </span>
+          {/* Minimalist divider line that grows */}
+          <div className="h-16 w-[1px] bg-gradient-to-b from-[#BFAF80] to-transparent" />
+        </div>
+      </div>
+
+      {/* Luxury Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
     </div>
   );
 }

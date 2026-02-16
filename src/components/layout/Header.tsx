@@ -14,10 +14,10 @@ export function Header() {
 
   const navLinks = [
     { href: '#home', label: 'Home' },
-    { href: '#story', label: 'Our Story' },
+    // { href: '#story', label: 'Our Story' },
     { href: '#events', label: 'Events' },
     { href: '#gallery', label: 'Gallery' },
-    { href: '#rsvp', label: 'RSVP' },
+    { href: '#rsvp', label: 'Rules' },
   ];
 
   const scrollToSection = (href: string) => {
