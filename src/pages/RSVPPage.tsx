@@ -1,5 +1,8 @@
 import { Section } from '../components/common';
-import { Heart, Users, Clock, Shirt, Gift, Camera, Phone, MapPin, Wine } from 'lucide-react';
+import { Heart, Users, Clock, Shirt
+  // Gift, Camera, Phone, MapPin, Wine
+
+ } from 'lucide-react';
 
 export function RulesRemindersPage() {
   const rules = [

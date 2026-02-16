@@ -80,7 +80,7 @@ export function OurStoryPage() {
             <motion.div
               ref={galleryRef}
               className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-6"
-              animate={{ x: ["0%", "-50%"] }}
+              animate={{  x: [0, -galleryWidth]  }}
               transition={{
                 ease: "linear",
                 duration: weddingPhotos.length * 5,
