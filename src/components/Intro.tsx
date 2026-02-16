@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface IntroProps {
   onComplete: () => void;
@@ -9,10 +9,11 @@ export function Intro({ onComplete }: IntroProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const link = document.createElement("link");
+    // Elegant Google Font imports
+    const link = document.createElement('link');
     link.href =
-      "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;500&display=swap";
-    link.rel = "stylesheet";
+      'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;500&display=swap';
+    link.rel = 'stylesheet';
     document.head.appendChild(link);
     return () => {
       document.head.removeChild(link);
@@ -24,109 +25,84 @@ export function Intro({ onComplete }: IntroProps) {
     setTimeout(() => {
       setIsVisible(false);
       onComplete();
-    }, 1200);
+    }, 1200); // Slightly longer for a smoother exit
   };
 
   if (!isVisible) return null;
 
   const colors = {
-    paper: "#FBFBF9",
-    ink: "#2D2926",
-    gold: "#BFAF80",
+    paper: '#FBFBF9', // Almost white, high-end paper feel
+    ink: '#2D2926',   // Deep charcoal/soft black
+    gold: '#BFAF80',  // True champagne gold
   };
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-between py-16 px-6 cursor-pointer transition-all duration-1000 ease-in-out
-        ${isExiting ? "translate-y-[-100%] opacity-0" : "translate-y-0 opacity-100"}`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center cursor-pointer transition-all duration-1000 ease-in-out
+        ${isExiting ? 'translate-y-[-100%] opacity-0' : 'translate-y-0 opacity-100'}`}
       style={{ backgroundColor: colors.paper }}
       onClick={handleStart}
     >
-      {/* 1. Top Detail (Floating Anchor) */}
-      <div className="w-full text-center">
+      <div className="relative z-10 text-center max-w-2xl px-4">
+        {/* Date or Location - Top Detail */}
         <p
-          className="text-[12px] sm:text-sm tracking-[0.4em] uppercase opacity-60"
+          className="mb-12 text-[10px] md:text-xs tracking-[0.4em] uppercase opacity-60 transition-all duration-700"
           style={{ fontFamily: "'Lora', serif", color: colors.ink }}
         >
-          Est. April 2026
+          Twenty Fourth of April • Two Thousand Twenty Six
         </p>
-      </div>
 
-      {/* 2. Main Content (Centered) */}
-      <div className="relative z-10 w-full text-center flex flex-col items-center justify-center">
-        {/* Name 1 - Large, Bold, Command Presence */}
-        <h1
-          className="text-[clamp(5rem,20vw,14rem)] font-semibold leading-[0.9] tracking-tight animate-fade-in-up"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            color: colors.ink,
-          }}
-        >
-          Armando
-        </h1>
-
-        {/* Separator - Elegant Italic Ampersand */}
-        <div className="py-2 md:py-4 animate-fade-in opacity-40">
-          <span
-            className="text-[clamp(4rem,12vw,7rem)] italic"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              color: colors.gold,
-            }}
+        {/* Main Typography Block */}
+        <div className="space-y-2 md:space-y-4 mb-16">
+          <h1
+            className="text-5xl md:text-8xl font-light tracking-tight animate-fade-in-up"
+            style={{ fontFamily: "'Playfair Display', serif", color: colors.ink }}
           >
-            &  
-          </span>
+            Armando
+          </h1>
+
+          <div className="flex items-center justify-center gap-4 py-2">
+            <span
+              className="text-3xl md:text-4xl italic opacity-40"
+              style={{ fontFamily: "'Playfair Display', serif", color: colors.gold }}
+            >
+              &
+            </span>
+          </div>
+
+          <h1
+            className="text-5xl md:text-8xl font-light tracking-tight animate-fade-in-up delay-200"
+            style={{ fontFamily: "'Playfair Display', serif", color: colors.ink }}
+          >
+            Gee
+          </h1>
         </div>
 
-        {/* Name 2 - Matching Scale */}
-        <h1
-          className="text-[clamp(5rem,20vw,14rem)] font-semibold leading-[0.9] tracking-tight animate-fade-in-up delay-200"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            color: colors.ink,
-          }}
-        >
-          Gee
-        </h1>
-
-        {/* Entry Prompt - Large enough to be the clear instruction */}
-        <div className="mt-16 md:mt-24">
+        {/* CTA */}
+        <div className="space-y-6">
           <p
-            className="text-[clamp(1.5rem,5vw,2rem)] tracking-[0.3em] uppercase opacity-60 animate-pulse"
-            style={{
-              fontFamily: "'Lora', serif",
-              color: colors.ink,
-            }}
-          >
-            Tap to enter
-          </p>
-        </div>
-      </div>
-
-      {/* 3. Footer (Interaction area) */}
-      <div className="w-full text-center space-y-8">
-        <div className="space-y-2">
-          <p
-            className="text-[12px] sm:text-sm tracking-[0.3em] uppercase"
+            className="text-[11px] md:text-sm tracking-[0.3em] uppercase italic"
             style={{ fontFamily: "'Lora', serif", color: colors.gold }}
           >
-            The Celebration Begins
+            Together with their families
           </p>
-        </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <span
-            className="text-[11px] tracking-[0.5em] uppercase opacity-40 animate-pulse"
-            style={{ color: colors.ink }}
-          >
-            Tap to Open
-          </span>
-          {/* Minimalist divider line that grows */}
-          <div className="h-16 w-[1px] bg-gradient-to-b from-[#BFAF80] to-transparent" />
+          <div className="pt-8">
+            <button className="group relative overflow-hidden px-8 py-3 transition-all">
+              <span
+                className="text-[10px] tracking-[0.5em] uppercase opacity-40 group-hover:opacity-100 transition-opacity"
+                style={{ color: colors.ink }}
+              >
+                Click to Open
+              </span>
+              {/* Animated underline */}
+              <div className="absolute bottom-0 left-1/2 w-0 h-[1px] bg-[#BFAF80] transition-all duration-500 group-hover:w-1/2 group-hover:left-1/4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Luxury Texture Overlay */}
+      {/* Modern Background Texture: Grain (Optional but adds "Luxury Paper" feel) */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
     </div>
   );
