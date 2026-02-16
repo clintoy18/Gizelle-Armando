@@ -7,31 +7,17 @@ interface IntroProps {
 export function Intro({ onComplete }: IntroProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
-
-  // Audio reference
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    // Add Google Fonts
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
-
-    return () => {
-      document.head.removeChild(link);
-    };
+    return () => { document.head.removeChild(link); };
   }, []);
 
   const handleClick = () => {
-    // // Play music
-    // if (audioRef.current) {
-    //   audioRef.current.play().catch((err) => {
-    //     console.log('Audio play failed:', err);
-    //   });
-    // }
-
-    // Exit intro
     setIsExiting(true);
     setTimeout(() => {
       setIsVisible(false);
@@ -41,40 +27,64 @@ export function Intro({ onComplete }: IntroProps) {
 
   if (!isVisible) return null;
 
+  // New Color Constants (Beige-Brown Palette)
+  const colors = {
+    bgLight: '#F5F2ED',    // Soft Beige/Cream
+    bgWarm: '#E8E2D9',     // Warm Sand
+    textBrown: '#5C4B40',  // Rich Earthy Brown
+    accentGold: '#A68D76', // Muted Taupe/Beige
+  };
+
   return (
     <div 
-      className={`fixed inset-0 z-[100] cursor-pointer flex items-center justify-center overflow-hidden transition-opacity duration-500 ${isExiting ? 'opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 z-[100] cursor-pointer flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${isExiting ? 'opacity-0' : 'opacity-100'}`}
       style={{
-        background: 'linear-gradient(180deg, hsl(var(--wedding-cream)) 0%, hsl(var(--wedding-tulle)) 50%, hsl(var(--wedding-cream)) 100%)',
+        // Gradient changed from pink-tones to a soft beige transition
+        background: `linear-gradient(180deg, ${colors.bgLight} 0%, ${colors.bgWarm} 50%, ${colors.bgLight} 100%)`,
       }}
       onClick={handleClick}
     >
-      {/* Audio Element */}
       <audio ref={audioRef} src="/music/wedding-song.mp3" />
 
-      {/* Decorative background elements */}
-      <div className="absolute top-[10%] left-[10%] w-64 h-64 rounded-full blur-3xl animate-float" style={{ backgroundColor: 'hsl(var(--wedding-champagne) / 0.15)' }} />
-      <div className="absolute bottom-[10%] right-[10%] w-80 h-80 rounded-full blur-3xl animate-float-delayed" style={{ backgroundColor: 'hsl(var(--wedding-brown) / 0.08)' }} />
-      <div className="absolute top-[40%] right-[20%] w-48 h-48 rounded-full blur-3xl animate-float" style={{ backgroundColor: 'hsl(var(--wedding-champagne) / 0.1)' }} />
+      {/* Refined Background Elements - Using Taupe and Sand blur circles */}
+      <div className="absolute top-[10%] left-[10%] w-64 h-64 rounded-full blur-3xl animate-float opacity-30" 
+           style={{ backgroundColor: colors.accentGold }} />
+      <div className="absolute bottom-[15%] right-[5%] w-96 h-96 rounded-full blur-3xl animate-float-delayed opacity-20" 
+           style={{ backgroundColor: colors.textBrown }} />
 
       {/* Main content */}
-      <div className="text-center space-y-8 px-6 relative z-10 animate-fade-in">
-        <div className="space-y-6">
-          <h1 className="text-6xl md:text-8xl font-bold transition-all duration-1000" style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))', textShadow: '0 2px 4px hsl(var(--wedding-brown) / 0.1)' }}>Armando</h1>
-          <div className="flex items-center justify-center gap-4">
-            <div className="h-px w-16 md:w-24" style={{ background: 'linear-gradient(to right, transparent, hsl(var(--wedding-champagne)))' }} />
-            <span className="text-4xl md:text-5xl" style={{ fontFamily: "'Great Vibes', cursive", color: 'hsl(var(--wedding-champagne))' }}>&</span>
-            <div className="h-px w-16 md:w-24" style={{ background: 'linear-gradient(to left, transparent, hsl(var(--wedding-champagne)))' }} />
+      <div className="text-center space-y-10 px-6 relative z-10 animate-fade-in">
+        <div className="space-y-4">
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tight" 
+              style={{ fontFamily: "'Playfair Display', serif", color: colors.textBrown }}>
+            Armando
+          </h1>
+          
+          <div className="flex items-center justify-center gap-6">
+            <div className="h-px w-12 md:w-20" style={{ backgroundColor: colors.accentGold, opacity: 0.5 }} />
+            <span className="text-5xl md:text-6xl italic" 
+                  style={{ fontFamily: "'Great Vibes', cursive", color: colors.accentGold }}>
+              &
+            </span>
+            <div className="h-px w-12 md:w-20" style={{ backgroundColor: colors.accentGold, opacity: 0.5 }} />
           </div>
-          <h2 className="text-6xl md:text-8xl font-bold transition-all duration-1000" style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))', textShadow: '0 2px 4px hsl(var(--wedding-brown) / 0.1)' }}>Gee</h2>
+
+          <h2 className="text-6xl md:text-8xl font-bold tracking-tight" 
+              style={{ fontFamily: "'Playfair Display', serif", color: colors.textBrown }}>
+            Gee
+          </h2>
         </div>
 
-        <p className="text-xl md:text-2xl font-light tracking-wide" style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-champagne))' }}>
+        <p className="text-lg md:text-xl font-medium tracking-[0.2em] uppercase" 
+           style={{ fontFamily: "'Lora', serif", color: colors.accentGold }}>
           Together we celebrate love
         </p>
 
-        <div className="pt-8 text-sm md:text-base animate-pulse" style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-champagne) / 0.8)' }}>
-          Click anywhere to continue
+        <div className="pt-12">
+          <span className="text-xs md:text-sm tracking-widest uppercase animate-pulse opacity-60" 
+                style={{ fontFamily: "'Lora', serif", color: colors.textBrown }}>
+            Click to enter
+          </span>
         </div>
       </div>
     </div>
