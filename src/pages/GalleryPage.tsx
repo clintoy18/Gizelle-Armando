@@ -106,10 +106,10 @@ export function GalleryPage() {
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <p 
-              className="text-sm sm:text-base md:text-lg tracking-[0.3em] uppercase mb-8 text-white/90"
+              className="text-sm sm:text-base md:text-lg tracking-[0.3em] uppercase mb-4 text-white/90"
               style={{ fontFamily: "'Lora', serif" }}
             >
-              December 15, 2024
+              
             </p>
             <h1 
               className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-6"

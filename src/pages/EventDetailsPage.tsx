@@ -95,6 +95,20 @@ export function EventDetailsPage() {
           </div>
         ))}
       </div>
+        {/* Footer */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+          <div className="text-center">
+            <p
+              className="text-sm sm:text-base md:text-lg opacity-60 italic"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: "hsl(var(--wedding-brown))",
+              }}
+            >
+              Scroll to view our gallery.
+            </p>
+          </div>
+        </div>
     </Section>
   );
 }
