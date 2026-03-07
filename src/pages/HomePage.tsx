@@ -3,61 +3,97 @@ import { motion } from 'framer-motion';
 
 export function HomePage() {
   return (
-    <Section 
-      id="home-content" 
+    <Section
+      id="home-content"
       className="relative text-center min-h-screen flex items-center justify-center overflow-hidden"
       style={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        backgroundImage: "url('/images/bg.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      {/* Overlay */}
-      <div 
-        className="absolute inset-0 bg-black/30" 
-        style={{ backgroundColor: 'rgba(255, 255, 255, 0.4)' }}
+      {/* Overlay - dark for text contrast */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
       />
 
       {/* Animate content */}
       <motion.div
         className="relative z-10 max-w-3xl mx-auto px-4"
-        initial={{ opacity: 0, y: 20 }}       // start invisible & slightly down
-        animate={{ opacity: 1, y: 0 }}        // fade in and move up
-        transition={{ duration: 2.5, ease: "easeOut" }} // smooth fade
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 2.5, ease: "easeOut" }}
       >
-        <p 
-          className="text-lg md:text-xl mb-8"
-          style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-champagne))' }}
+        <p
+          className="text-lg md:text-xl mb-8 font-light tracking-wide"
+          style={{
+            fontFamily: "'Lora', serif",
+            color: '#f5f1e8',
+            textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+          }}
         >
           We joyfully invite you to celebrate
         </p>
-        <h2 
-          className="text-5xl md:text-7xl mb-6"
-          style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))' }}
+
+        <h2
+          className="text-5xl md:text-7xl mb-6 font-light"
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#ffffff',
+            textShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+            letterSpacing: '0.05em',
+          }}
         >
           Our Wedding Day
         </h2>
-        
+
         <div className="flex items-center justify-center gap-4 mb-8">
-          <div className="h-px w-12 md:w-20" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
-          <span 
-            className="text-4xl md:text-5xl"
-            style={{ fontFamily: "'Great Vibes', cursive", color: 'hsl(var(--wedding-champagne))' }}
+          <div
+            className="h-px w-12 md:w-20"
+            style={{
+              backgroundColor: '#f5f1e8',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+            }}
+          />
+          <span
+            className="text-4xl md:text-5xl font-light"
+            style={{
+              fontFamily: "'Great Vibes', cursive",
+              color: '#f5f1e8',
+              textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+            }}
           >
             Save the Date
           </span>
-          <div className="h-px w-12 md:w-20" style={{ backgroundColor: 'hsl(var(--wedding-champagne))' }} />
+          <div
+            className="h-px w-12 md:w-20"
+            style={{
+              backgroundColor: '#f5f1e8',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+            }}
+          />
         </div>
 
-        <p 
+        <p
           className="text-2xl md:text-4xl font-light mb-4"
-          style={{ fontFamily: "'Playfair Display', serif", color: 'hsl(var(--wedding-brown))' }}
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#ffffff',
+            textShadow: '0 3px 10px rgba(0, 0, 0, 0.4)',
+            letterSpacing: '0.02em',
+          }}
         >
           December 15, 2025
         </p>
-        <p 
-          className="text-xl"
-          style={{ fontFamily: "'Lora', serif", color: 'hsl(var(--wedding-champagne))' }}
+
+        <p
+          className="text-xl font-light tracking-wide"
+          style={{
+            fontFamily: "'Lora', serif",
+            color: '#f5f1e8',
+            textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+          }}
         >
           Manila, Philippines
         </p>

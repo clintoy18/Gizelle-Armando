@@ -9,25 +9,25 @@ export function RulesRemindersPage() {
     {
   icon: Users,
   title: "Intimate Guest List",
-  description: "Due to limited space, we're unable to accommodate additional guests. We hope you understand and look forward to celebrating with you.",
+  description: "Due to limited space, we are unable to accommodate additional guests. We hope you understand and look forward to celebrating with you.",
   importance: "essential"
 },
 {
   icon: Clock,
   title: "Join Us for the Full Evening",
-  description: "We've planned a beautiful evening from ceremony to last dance. We'd be honored if you could join us for the entire celebration.",
+  description: "We have planned a beautiful evening from ceremony to last dance. We'd be honored if you could join us for the entire celebration.",
   importance: "essential"
 },
 {
   icon: Shirt,
   title: "Formal Elegance Requested",
-  description: "Help us create a stunning atmosphere by dressing in your finest formal attire. We can't wait to see you looking fabulous!",
+  description: "Help us create a stunning atmosphere by dressing in your finest formal attire. We look forward to see you looking fabulous!",
   importance: "essential"
 }
   ];
 
   return (
-    <Section bgColor="cream" className="py-16 sm:py-20 md:py-24">
+    <Section bgColor="white" className="py-16 sm:py-20 md:py-24">
       <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -42,17 +42,17 @@ export function RulesRemindersPage() {
             className="text-3xl sm:text-4xl md:text-5xl mb-4 sm:mb-6"
             style={{ 
               fontFamily: "'Playfair Display', serif",
-              color: 'hsl(var(--wedding-brown))'
+              color: '#2d2926'
             }}
           >
-            Rules & Reminders
+            Guidelines Rules & Reminders Reminders
           </h2>
           
           <p 
             className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
             style={{ 
               fontFamily: "'Lora', serif",
-              color: 'hsl(var(--wedding-champagne))'
+              color: '#5a5a5a'
             }}
           >
             To ensure our special day runs smoothly and everyone enjoys the celebration, 
@@ -70,13 +70,13 @@ export function RulesRemindersPage() {
         {/* Essential Rules Banner */}
         <div 
           className="bg-gradient-to-r from-amber-50 to-amber-100 border-l-4 rounded-lg p-6 sm:p-8 mb-12"
-          style={{ borderColor: 'hsl(var(--wedding-brown))' }}
+          style={{ borderColor: '#2d2926' }}
         >
           <h3 
             className="text-xl sm:text-2xl font-bold mb-3"
             style={{ 
               fontFamily: "'Playfair Display', serif",
-              color: 'hsl(var(--wedding-brown))'
+              color: '#2d2926'
             }}
           >
             Essential Guidelines
@@ -85,7 +85,7 @@ export function RulesRemindersPage() {
             className="text-sm sm:text-base leading-relaxed"
             style={{ 
               fontFamily: "'Lora', serif",
-              color: 'hsl(var(--wedding-champagne))'
+              color: '#5a5a5a'
             }}
           >
             These guidelines are crucial to the success of our celebration. 
@@ -118,7 +118,7 @@ export function RulesRemindersPage() {
                   >
                     <IconComponent 
                       className="w-6 h-6 sm:w-7 sm:h-7" 
-                      style={{ color: 'hsl(var(--wedding-brown))' }}
+                      style={{ color: '#2d2926' }}
                     />
                   </div>
                   
@@ -128,7 +128,7 @@ export function RulesRemindersPage() {
                         className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-2"
                         style={{ 
                           backgroundColor: 'hsl(var(--wedding-champagne) / 0.2)',
-                          color: 'hsl(var(--wedding-brown))'
+                          color: '#2d2926'
                         }}
                       >
                         Required
@@ -139,7 +139,7 @@ export function RulesRemindersPage() {
                       className="text-lg sm:text-xl font-bold mb-2"
                       style={{ 
                         fontFamily: "'Playfair Display', serif",
-                        color: 'hsl(var(--wedding-brown))'
+                        color: '#2d2926'
                       }}
                     >
                       {rule.title}
@@ -149,7 +149,7 @@ export function RulesRemindersPage() {
                       className="text-sm sm:text-base leading-relaxed"
                       style={{ 
                         fontFamily: "'Lora', serif",
-                        color: 'hsl(var(--wedding-champagne))'
+                        color: '#5a5a5a'
                       }}
                     >
                       {rule.description}
@@ -168,7 +168,7 @@ export function RulesRemindersPage() {
               className="text-2xl sm:text-3xl mb-4 italic"
               style={{ 
                 fontFamily: "'Playfair Display', serif",
-                color: 'hsl(var(--wedding-brown))'
+                color: '#2d2926'
               }}
             >
               "Love is patient, love is kind."
@@ -177,7 +177,7 @@ export function RulesRemindersPage() {
               className="text-xs sm:text-sm uppercase tracking-wider mb-6"
               style={{ 
                 fontFamily: "'Lora', serif",
-                color: 'hsl(var(--wedding-champagne))'
+                color: '#5a5a5a'
               }}
             >
               1 Corinthians 13:4
@@ -186,7 +186,7 @@ export function RulesRemindersPage() {
               className="text-base sm:text-lg leading-relaxed"
               style={{ 
                 fontFamily: "'Lora', serif",
-                color: 'hsl(var(--wedding-champagne))'
+                color: '#5a5a5a'
               }}
             >
               Thank you for respecting our wishes and helping us create 
@@ -199,10 +199,19 @@ export function RulesRemindersPage() {
                 className="text-3xl sm:text-4xl"
                 style={{ 
                   fontFamily: "'Great Vibes', cursive",
-                  color: 'hsl(var(--wedding-brown))'
+                  color: '#2d2926'
                 }}
               >
                 With Love & Gratitude
+              <p 
+                className="text-sm mt-3"
+                style={{ 
+                  fontFamily: "'Lora', serif",
+                  color: '#8b6f47'
+                }}
+              >
+                Armando & Gizelle
+              </p>
               </p>
             </div>
           </div>

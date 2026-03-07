@@ -6,49 +6,49 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 const photos = [
   { 
     id: 1, 
-    src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/1.jpg', 
     alt: 'Engagement portrait',
     orientation: 'portrait'
   },
   { 
     id: 2, 
-    src: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/2.jpg', 
     alt: 'Wedding ceremony',
     orientation: 'landscape'
   },
   { 
     id: 3, 
-    src: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/3.jpg', 
     alt: 'Reception celebration',
     orientation: 'landscape'
   },
   { 
     id: 4, 
-    src: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop', 
+    src: '/images/4.jpg', 
     alt: 'Couple dancing',
     orientation: 'portrait'
   },
   { 
     id: 5, 
-    src: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/5.jpg', 
     alt: 'Wedding details',
     orientation: 'square'
   },
   { 
     id: 6, 
-    src: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/6.jpg', 
     alt: 'Romantic sunset',
     orientation: 'landscape'
   },
   { 
     id: 7, 
-    src: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/7.jpg', 
     alt: 'First dance',
     orientation: 'portrait'
   },
   { 
     id: 8, 
-    src: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80', 
+    src: '/images/8.jpg', 
     alt: 'Wedding rings',
     orientation: 'square'
   },
@@ -93,7 +93,7 @@ export function GalleryPage() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=80')"
+            backgroundImage: "url('/images/2.jpg')"
           }}
         >
           <div className="absolute inset-0 bg-black/30" />

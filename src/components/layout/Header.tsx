@@ -37,27 +37,29 @@ export function Header() {
   };
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'py-3 shadow-md' 
+        isScrolled
+          ? 'py-3 shadow-lg'
           : 'py-5'
       }`}
-      style={{ 
-        backgroundColor: isScrolled 
-          ? 'hsl(var(--wedding-cream))' 
-          : 'hsl(var(--wedding-cream) / 0.95)', // ✅ Always have slight background
-        backdropFilter: 'blur(8px)' // ✅ Add blur for elegance
+      style={{
+        backgroundColor: isScrolled
+          ? '#ffffff'
+          : 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: isScrolled ? '1px solid rgba(0, 0, 0, 0.08)' : 'none',
       }}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <a 
-          href="#home" 
+        <a
+          href="#home"
           onClick={(e) => { e.preventDefault(); scrollToSection('#home'); }}
           className="text-2xl md:text-3xl transition-opacity hover:opacity-70"
-          style={{ 
+          style={{
             fontFamily: "'Great Vibes', cursive",
-            color: 'hsl(var(--wedding-brown))'
+            color: '#8b6f47',
+            fontWeight: '400',
           }}
         >
           Gizelle & Armando
@@ -70,14 +72,20 @@ export function Header() {
               key={link.href}
               href={link.href}
               onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-              className="text-sm tracking-wide transition-colors hover:opacity-70 uppercase"
-              style={{ 
+              className="text-sm tracking-widest transition-all duration-300 uppercase hover:opacity-60 relative group"
+              style={{
                 fontFamily: "'Lora', serif",
-                color: 'hsl(var(--wedding-brown))',
-                letterSpacing: '0.1em'
+                color: '#5a5a5a',
+                letterSpacing: '0.12em',
+                fontWeight: '500',
               }}
             >
               {link.label}
+              {/* Underline animation */}
+              <span
+                className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+                style={{ backgroundColor: '#8b6f47' }}
+              />
             </a>
           ))}
         </nav>
@@ -87,7 +95,7 @@ export function Header() {
           className="md:hidden p-2 transition-opacity hover:opacity-70"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
-          style={{ color: 'hsl(var(--wedding-brown))' }}
+          style={{ color: '#8b6f47' }}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMobileMenuOpen ? (
@@ -101,11 +109,11 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="md:hidden absolute top-full left-0 right-0 py-4 shadow-lg border-t"
-          style={{ 
-            backgroundColor: 'hsl(var(--wedding-cream))',
-            borderColor: 'hsl(var(--wedding-brown) / 0.1)'
+          style={{
+            backgroundColor: '#ffffff',
+            borderColor: 'rgba(0, 0, 0, 0.08)',
           }}
         >
           <nav className="flex flex-col items-center gap-4">
@@ -114,11 +122,12 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-                className="text-sm tracking-wide uppercase transition-opacity hover:opacity-70"
-                style={{ 
+                className="text-sm tracking-widest uppercase transition-opacity hover:opacity-60"
+                style={{
                   fontFamily: "'Lora', serif",
-                  color: 'hsl(var(--wedding-brown))',
-                  letterSpacing: '0.1em'
+                  color: '#5a5a5a',
+                  letterSpacing: '0.12em',
+                  fontWeight: '500',
                 }}
               >
                 {link.label}

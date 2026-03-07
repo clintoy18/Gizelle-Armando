@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { Section } from "../components/common";
 
 const weddingPhotos = [
-  "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800",
-  "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800",
-  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800",
-  "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800",
-  "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800",
+  "/images/9.jpg",
+  "/images/10.jpg",
+  "/images/11.jpg",
+  "/images/9.jpg",
+  "/images/12.jpg",
 ];
 
 export function OurStoryPage() {
