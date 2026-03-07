@@ -33,8 +33,8 @@ export function RulesRemindersPage() {
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-full flex items-center justify-center">
-              <Heart className="w-8 h-8 text-amber-700" />
+            <div className="w-16 h-16 bg-gradient-to-br from-transparent to-transparent rounded-full flex items-center justify-center">
+              <Heart className="w-8 h-8 #8b6f47" />
             </div>
           </div>
           
@@ -69,7 +69,7 @@ export function RulesRemindersPage() {
 
         {/* Essential Rules Banner */}
         <div 
-          className="bg-gradient-to-r from-amber-50 to-amber-100 border-l-4 rounded-lg p-6 sm:p-8 mb-12"
+          className="bg-gradient-to-r #f5f1e8 border-l-4 rounded-lg p-6 sm:p-8 mb-12"
           style={{ borderColor: '#2d2926' }}
         >
           <h3 
@@ -102,9 +102,9 @@ export function RulesRemindersPage() {
             return (
               <div
                 key={index}
-                className={`bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300 border-2 ${
+                className={`style={{ backgroundColor: '#ffffff' }} rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300 border-2 ${
                   isEssential 
-                    ? 'border-amber-200 hover:border-amber-300' 
+                    ? '#e8e0d0 hover:#d4ccc0' 
                     : 'border-stone-100 hover:border-stone-200'
                 }`}
               >
@@ -112,7 +112,7 @@ export function RulesRemindersPage() {
                   <div 
                     className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center ${
                       isEssential 
-                        ? 'bg-gradient-to-br from-amber-100 to-amber-200' 
+                        ? 'bg-gradient-to-br from-transparent to-transparent' 
                         : 'bg-stone-100'
                     }`}
                   >
@@ -162,7 +162,7 @@ export function RulesRemindersPage() {
         </div>
 
         {/* Bottom Note */}
-        <div className="text-center bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-stone-100">
+        <div className="text-center style={{ backgroundColor: '#ffffff' }} rounded-2xl p-8 sm:p-10 shadow-sm border border-stone-100">
           <div className="max-w-2xl mx-auto">
             <p 
               className="text-2xl sm:text-3xl mb-4 italic"
