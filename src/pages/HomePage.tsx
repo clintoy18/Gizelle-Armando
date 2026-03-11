@@ -84,7 +84,7 @@ export function HomePage() {
             letterSpacing: '0.02em',
           }}
         >
-          December 15, 2025
+          April 29, 2026
         </p>
 
         <p
@@ -95,7 +95,7 @@ export function HomePage() {
             textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
           }}
         >
-          Manila, Philippines
+          Cebu Metropolitan Cathedral, Cebu City
         </p>
       </motion.div>
     </Section>

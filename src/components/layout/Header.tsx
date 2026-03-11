@@ -17,7 +17,7 @@ export function Header() {
     // { href: '#story', label: 'Our Story' },
     { href: '#events', label: 'Events' },
     { href: '#gallery', label: 'Gallery' },
-    { href: '#rsvp', label: 'Rules' },
+    { href: '#rsvp', label: 'RSVP' },
   ];
 
   const scrollToSection = (href: string) => {

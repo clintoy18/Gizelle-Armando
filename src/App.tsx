@@ -8,7 +8,7 @@ import {
   HomePage,
   OurStoryPage,
   EventDetailsPage,
-  RulesRemindersPage,
+  RSVPPage,
   GalleryPage,
 } from "./pages";
 
@@ -53,7 +53,7 @@ export default function App() {
               <GalleryPage />
             </div>
             <div id="rsvp" className="w-full">
-              <RulesRemindersPage />
+              <RSVPPage />
             </div>
           </main>
           <Footer />

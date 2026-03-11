@@ -1,221 +1,237 @@
 import { Section } from '../components/common';
-import { Heart, Users, Clock, Shirt
-  // Gift, Camera, Phone, MapPin, Wine
+import { Heart, Camera } from 'lucide-react';
+import { motion } from 'framer-motion';
 
- } from 'lucide-react';
-
-export function RulesRemindersPage() {
-  const rules = [
-    {
-  icon: Users,
-  title: "Intimate Guest List",
-  description: "Due to limited space, we are unable to accommodate additional guests. We hope you understand and look forward to celebrating with you.",
-  importance: "essential"
-},
-{
-  icon: Clock,
-  title: "Join Us for the Full Evening",
-  description: "We have planned a beautiful evening from ceremony to last dance. We'd be honored if you could join us for the entire celebration.",
-  importance: "essential"
-},
-{
-  icon: Shirt,
-  title: "Formal Elegance Requested",
-  description: "Help us create a stunning atmosphere by dressing in your finest formal attire. We look forward to see you looking fabulous!",
-  importance: "essential"
-}
+export function RSVPPage() {
+  const attireColors = [
+    { name: 'Coral', hex: '#F08080' },
+    { name: 'Blush Pink', hex: '#FFB6C1' },
+    { name: 'Gold', hex: '#D4AF37' },
+    { name: 'Cream', hex: '#FFFDD0' },
+    { name: 'Beige', hex: '#F5F5DC' },
   ];
 
   return (
     <Section bgColor="white" className="py-16 sm:py-20 md:py-24">
-      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-transparent to-transparent rounded-full flex items-center justify-center">
-              <Heart className="w-8 h-8 #8b6f47" />
-            </div>
-          </div>
-          
-          <h2 
-            className="text-3xl sm:text-4xl md:text-5xl mb-4 sm:mb-6"
-            style={{ 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12 sm:mb-16"
+        >
+          <h2
+            className="text-5xl sm:text-6xl md:text-7xl mb-6"
+            style={{
               fontFamily: "'Playfair Display', serif",
-              color: '#2d2926'
+              color: '#2d2926',
+              letterSpacing: '0.1em'
             }}
           >
-            Guidelines Rules & Reminders Reminders
+            RSVP
           </h2>
-          
-          <p 
-            className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ 
+
+          <p
+            className="text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-4"
+            style={{
               fontFamily: "'Lora', serif",
               color: '#5a5a5a'
             }}
           >
-            To ensure our special day runs smoothly and everyone enjoys the celebration, 
-            we kindly ask that you observe the following guidelines.
+            We are delighted to share the joy of our wedding day with our closest family and friends!
           </p>
 
           {/* Decorative divider */}
           <div className="flex justify-center items-center gap-4 mt-8">
-            <div className="h-px w-16 bg-stone-300" />
-            <div className="w-2 h-2 rounded-full border border-stone-300" />
-            <div className="h-px w-16 bg-stone-300" />
+            <div className="h-px w-12 bg-stone-300" />
+            <Heart className="w-5 h-5" style={{ color: '#8b6f47' }} />
+            <div className="h-px w-12 bg-stone-300" />
           </div>
-        </div>
+        </motion.div>
 
-        {/* Essential Rules Banner */}
-        <div 
-          className="bg-gradient-to-r #f5f1e8 border-l-4 rounded-lg p-6 sm:p-8 mb-12"
-          style={{ borderColor: '#2d2926' }}
+        {/* RSVP Details */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl p-8 sm:p-10 mb-12 border border-stone-200"
         >
-          <h3 
-            className="text-xl sm:text-2xl font-bold mb-3"
-            style={{ 
-              fontFamily: "'Playfair Display', serif",
+          <p
+            className="text-center text-lg sm:text-xl mb-4"
+            style={{
+              fontFamily: "'Lora', serif",
               color: '#2d2926'
             }}
           >
-            Essential Guidelines
-          </h3>
-          <p 
-            className="text-sm sm:text-base leading-relaxed"
-            style={{ 
+            The favor of a response is requested before
+          </p>
+          <p
+            className="text-center text-2xl sm:text-3xl font-bold mb-4"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#8b6f47'
+            }}
+          >
+            April 25, 2026
+          </p>
+          <p
+            className="text-center text-lg"
+            style={{
               fontFamily: "'Lora', serif",
               color: '#5a5a5a'
             }}
           >
-            These guidelines are crucial to the success of our celebration. 
-            By attending, you agree to honor these requests with grace and understanding.
+            Thank you!
           </p>
-        </div>
+          <p
+            className="text-center text-base italic mt-6"
+            style={{
+              fontFamily: "'Lora', serif",
+              color: '#5a5a5a'
+            }}
+          >
+            Please message us to confirm your attendance.
+          </p>
+        </motion.div>
 
-        {/* Rules Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12">
-          {rules.map((rule, index) => {
-            const IconComponent = rule.icon;
-            const isEssential = rule.importance === 'essential';
-            
-            return (
-              <div
-                key={index}
-                className={`style={{ backgroundColor: '#ffffff' }} rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300 border-2 ${
-                  isEssential 
-                    ? '#e8e0d0 hover:#d4ccc0' 
-                    : 'border-stone-100 hover:border-stone-200'
-                }`}
-              >
-                <div className="flex items-start gap-4 sm:gap-5">
-                  <div 
-                    className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center ${
-                      isEssential 
-                        ? 'bg-gradient-to-br from-transparent to-transparent' 
-                        : 'bg-stone-100'
-                    }`}
+        {/* Attire Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mb-12"
+        >
+          <h3
+            className="text-3xl sm:text-4xl text-center mb-8"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#2d2926',
+              letterSpacing: '0.1em'
+            }}
+          >
+            ATTIRE
+          </h3>
+
+          <div className="bg-stone-50 rounded-2xl p-8 sm:p-10 border border-stone-200 mb-8">
+            <p
+              className="text-center text-lg mb-6"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: '#5a5a5a'
+              }}
+            >
+              We would love to see you in your formal attire. We encourage you to dress according to our wedding color.
+            </p>
+
+            {/* Color Palette */}
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+              {attireColors.map((color) => (
+                <div key={color.name} className="text-center">
+                  <div
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full shadow-md mb-2 border-2 border-stone-300"
+                    style={{ backgroundColor: color.hex }}
+                  />
+                  <p
+                    className="text-sm"
+                    style={{
+                      fontFamily: "'Lora', serif",
+                      color: '#5a5a5a'
+                    }}
                   >
-                    <IconComponent 
-                      className="w-6 h-6 sm:w-7 sm:h-7" 
-                      style={{ color: '#2d2926' }}
-                    />
-                  </div>
-                  
-                  <div className="flex-1">
-                    {isEssential && (
-                      <span 
-                        className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-2"
-                        style={{ 
-                          backgroundColor: 'hsl(var(--wedding-champagne) / 0.2)',
-                          color: '#2d2926'
-                        }}
-                      >
-                        Required
-                      </span>
-                    )}
-                    
-                    <h3 
-                      className="text-lg sm:text-xl font-bold mb-2"
-                      style={{ 
-                        fontFamily: "'Playfair Display', serif",
-                        color: '#2d2926'
-                      }}
-                    >
-                      {rule.title}
-                    </h3>
-                    
-                    <p 
-                      className="text-sm sm:text-base leading-relaxed"
-                      style={{ 
-                        fontFamily: "'Lora', serif",
-                        color: '#5a5a5a'
-                      }}
-                    >
-                      {rule.description}
-                    </p>
-                  </div>
+                    {color.name}
+                  </p>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
 
-        {/* Bottom Note */}
-        <div className="text-center style={{ backgroundColor: '#ffffff' }} rounded-2xl p-8 sm:p-10 shadow-sm border border-stone-100">
-          <div className="max-w-2xl mx-auto">
-            <p 
-              className="text-2xl sm:text-3xl mb-4 italic"
-              style={{ 
-                fontFamily: "'Playfair Display', serif",
+        {/* Note of Gifts Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mb-12"
+        >
+          <h3
+            className="text-3xl sm:text-4xl text-center mb-8"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#2d2926',
+              letterSpacing: '0.1em'
+            }}
+          >
+            NOTE OF GIFTS
+          </h3>
+
+          <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl p-8 sm:p-10 border border-rose-200">
+            <p
+              className="text-center text-lg leading-relaxed"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: '#5a5a5a'
+              }}
+            >
+              With all that we have, we've been truly blessed, your presence and prayers all that we request. But if you desire to give nonetheless, monetary gifts is the one we humbly suggest.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Photo Sharing Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="text-center"
+        >
+          <h3
+            className="text-3xl sm:text-4xl mb-8"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#2d2926',
+              letterSpacing: '0.1em'
+            }}
+          >
+            Capture with Love
+          </h3>
+
+          <div className="bg-stone-50 rounded-2xl p-8 sm:p-10 border border-stone-200 max-w-2xl mx-auto">
+            <Camera className="w-12 h-12 mx-auto mb-6" style={{ color: '#8b6f47' }} />
+
+            <p
+              className="text-lg sm:text-xl mb-6 font-light"
+              style={{
+                fontFamily: "'Great Vibes', cursive",
                 color: '#2d2926'
               }}
             >
-              "Love is patient, love is kind."
+              Share Your Photos With Us!
             </p>
-            <p 
-              className="text-xs sm:text-sm uppercase tracking-wider mb-6"
-              style={{ 
+
+            <p
+              className="text-base leading-relaxed"
+              style={{
                 fontFamily: "'Lora', serif",
                 color: '#5a5a5a'
               }}
             >
-              1 Corinthians 13:4
+              Scan the QR code with your smartphone and upload your favorites!
             </p>
-            <p 
-              className="text-base sm:text-lg leading-relaxed"
-              style={{ 
-                fontFamily: "'Lora', serif",
-                color: '#5a5a5a'
-              }}
-            >
-              Thank you for respecting our wishes and helping us create 
-              the perfect celebration of our union. Your understanding means the world to us.
-            </p>
-            
-            {/* Signature */}
-            <div className="mt-8 pt-8 border-t border-stone-200">
-              <p 
-                className="text-3xl sm:text-4xl"
-                style={{ 
-                  fontFamily: "'Great Vibes', cursive",
-                  color: '#2d2926'
-                }}
-              >
-                With Love & Gratitude
-              <p 
-                className="text-sm mt-3"
-                style={{ 
-                  fontFamily: "'Lora', serif",
-                  color: '#8b6f47'
-                }}
-              >
-                Armando & Gizelle
-              </p>
-              </p>
+
+            <div className="mt-8 p-6 bg-white rounded-lg inline-block border-2 border-stone-300">
+              <div className="w-32 h-32 bg-stone-200 rounded flex items-center justify-center">
+                <span style={{ color: '#8b6f47' }}>QR Code</span>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </Section>

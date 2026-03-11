@@ -37,15 +37,15 @@ export function EventDetailsPage() {
         >
           Wedding Events
         </h2>
-        <p 
+        <p
           className="text-lg mb-12 max-w-xl mx-auto"
-          style={{ 
+          style={{
             fontFamily: "'Lora', serif",
             color: '#8b6f47',
             letterSpacing: '0.05em'
           }}
         >
-          December 15, 2025
+          April 29, 2026
         </p>
       </motion.div>
 
