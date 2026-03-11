@@ -97,6 +97,19 @@ export function HomePage() {
         >
           Cebu Metropolitan Cathedral, Cebu City
         </p>
+
+        <div className="mt-12">
+          <p
+            className="text-lg md:text-xl font-light tracking-wide"
+            style={{
+              fontFamily: "'Lora', serif",
+              color: '#f5f1e8',
+              textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            #GIZELLEctedByGodForARMANDO
+          </p>
+        </div>
       </motion.div>
     </Section>
   );

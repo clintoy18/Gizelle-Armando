@@ -129,6 +129,16 @@ export function EventDetailsPage() {
           >
             Armando & Gizelle's Nuptials
           </p>
+          <p
+            className="text-base sm:text-lg md:text-xl mt-6 font-light tracking-widest"
+            style={{
+              fontFamily: "'Lora', serif",
+              color: "#8b6f47",
+              letterSpacing: '0.05em'
+            }}
+          >
+            #GIZELLEctedByGodForARMANDO
+          </p>
         </div>
       </motion.div>
     </Section>

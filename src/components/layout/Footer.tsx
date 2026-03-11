@@ -49,15 +49,26 @@ export function Footer() {
           Gizelle & Armando
         </h3>
 
-        <p 
+        <p
           className="text-sm sm:text-base mb-8"
-          style={{ 
+          style={{
             fontFamily: "'Lora', serif",
             color: 'hsl(var(--wedding-cream) / 0.8)',
             fontStyle: 'italic'
           }}
         >
           Together we celebrate love
+        </p>
+
+        <p
+          className="text-base sm:text-lg mb-8 font-light tracking-widest"
+          style={{
+            fontFamily: "'Lora', serif",
+            color: 'hsl(var(--wedding-champagne))',
+            letterSpacing: '0.05em'
+          }}
+        >
+          #GIZELLEctedByGodForARMANDO
         </p>
 
         {/* Copyright */}

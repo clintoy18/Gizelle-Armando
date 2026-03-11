@@ -146,14 +146,14 @@ export function GalleryPage() {
           of love, joy, and the beginning of our forever together.
         </p>
         
-        <p 
+        <p
           className="text-sm italic"
-          style={{ 
+          style={{
             fontFamily: "'Lora', serif",
             color: 'hsl(var(--wedding-brown))'
           }}
         >
-          Photography by Jessica Lane Studios
+          Photography by Dar Lish Photography
         </p>
       </div>
 

@@ -230,6 +230,17 @@ export function RSVPPage() {
                 <span style={{ color: '#8b6f47' }}>QR Code</span>
               </div>
             </div>
+
+            <p
+              className="text-lg sm:text-xl mt-8 font-light tracking-widest"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: '#8b6f47',
+                letterSpacing: '0.05em'
+              }}
+            >
+              #GIZELLEctedByGodForARMANDO
+            </p>
           </div>
         </motion.div>
 
