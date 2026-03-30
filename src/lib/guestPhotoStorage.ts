@@ -13,6 +13,11 @@ interface CreateGuestPhotoUploadInput {
   file: File;
 }
 
+interface CreateGuestPhotoUploadsInput {
+  guestName: string;
+  files: File[];
+}
+
 interface GuestPhotoUploadRow {
   id: string;
   guest_name: string;
@@ -138,42 +143,60 @@ export async function createGuestPhotoUpload({
   guestName,
   file,
 }: CreateGuestPhotoUploadInput): Promise<GuestPhotoUpload> {
+  const [upload] = await createGuestPhotoUploads({
+    guestName,
+    files: [file],
+  });
+
+  return upload;
+}
+
+export async function createGuestPhotoUploads({
+  guestName,
+  files,
+}: CreateGuestPhotoUploadsInput): Promise<GuestPhotoUpload[]> {
   const supabase = getSupabaseClient();
   const user = await ensureAnonymousSession();
-  const uploadId = crypto.randomUUID();
-  const compressedImage = await compressImage(file);
-  const sanitizedFileName = file.name.replace(/\s+/g, '-').toLowerCase();
-  const storagePath = `${user.id}/${uploadId}-${sanitizedFileName}.jpg`;
+  const createdUploads: GuestPhotoUpload[] = [];
 
-  const { error: uploadError } = await supabase.storage
-    .from(GUEST_PHOTO_BUCKET)
-    .upload(storagePath, compressedImage, {
-      cacheControl: '3600',
-      contentType: 'image/jpeg',
-      upsert: false,
-    });
+  for (const file of files) {
+    const uploadId = crypto.randomUUID();
+    const compressedImage = await compressImage(file);
+    const sanitizedFileName = file.name.replace(/\s+/g, '-').toLowerCase();
+    const storagePath = `${user.id}/${uploadId}-${sanitizedFileName}.jpg`;
 
-  if (uploadError) {
-    throw new Error(uploadError.message);
+    const { error: uploadError } = await supabase.storage
+      .from(GUEST_PHOTO_BUCKET)
+      .upload(storagePath, compressedImage, {
+        cacheControl: '3600',
+        contentType: 'image/jpeg',
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
+
+    const { data, error } = await supabase
+      .from('guest_photo_uploads')
+      .insert({
+        id: uploadId,
+        user_id: user.id,
+        guest_name: guestName.trim(),
+        storage_path: storagePath,
+        file_name: file.name,
+      })
+      .select('id, guest_name, storage_path, file_name, created_at')
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    createdUploads.push(mapUploadRow(data as GuestPhotoUploadRow));
   }
 
-  const { data, error } = await supabase
-    .from('guest_photo_uploads')
-    .insert({
-      id: uploadId,
-      user_id: user.id,
-      guest_name: guestName.trim(),
-      storage_path: storagePath,
-      file_name: file.name,
-    })
-    .select('id, guest_name, storage_path, file_name, created_at')
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return mapUploadRow(data as GuestPhotoUploadRow);
+  return createdUploads;
 }
 
 export function formatUploadDate(createdAt: string): string {

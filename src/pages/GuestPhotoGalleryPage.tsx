@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, Images, Upload } from 'lucide-react';
 import { formatUploadDate, getGuestPhotoUploads } from '../lib/guestPhotoStorage';
 import type { GuestPhotoUpload } from '../lib/guestPhotoStorage';
 import { isSupabaseConfigured } from '../lib/supabase';
 
 export function GuestPhotoGalleryPage() {
+  const [searchParams] = useSearchParams();
   const [uploads, setUploads] = useState<GuestPhotoUpload[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const uploadedCount = Number(searchParams.get('uploaded') ?? '0');
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -86,6 +88,23 @@ export function GuestPhotoGalleryPage() {
             Browse the moments captured throughout the celebration. Each card links to its own page so every upload can be viewed on its own.
           </p>
         </div>
+
+        {uploadedCount > 0 && (
+          <div className="mb-8 rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-6 py-4 text-center">
+            <p
+              className="text-sm uppercase tracking-[0.18em]"
+              style={{ fontFamily: "'Lora', serif", color: '#2f6b52' }}
+            >
+              Upload complete
+            </p>
+            <p
+              className="mt-2 text-base"
+              style={{ fontFamily: "'Lora', serif", color: '#2d2926' }}
+            >
+              {uploadedCount} {uploadedCount === 1 ? 'photo has' : 'photos have'} been added to the guest wall.
+            </p>
+          </div>
+        )}
 
         {error ? (
           <div className="rounded-[2rem] border border-rose-200 bg-white px-8 py-16 text-center shadow-sm">

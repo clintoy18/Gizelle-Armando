@@ -2,14 +2,19 @@ import { useEffect, useMemo, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Camera, ChevronLeft, Images, Upload } from 'lucide-react';
-import { createGuestPhotoUpload } from '../lib/guestPhotoStorage';
+import { createGuestPhotoUploads } from '../lib/guestPhotoStorage';
 import { isSupabaseConfigured } from '../lib/supabase';
+
+interface PreviewFile {
+  file: File;
+  previewUrl: string;
+}
 
 export function GuestPhotoUploadPage() {
   const navigate = useNavigate();
   const [guestName, setGuestName] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewFiles, setPreviewFiles] = useState<PreviewFile[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const isConfigured = isSupabaseConfigured();
@@ -21,35 +26,36 @@ export function GuestPhotoUploadPage() {
 
   useEffect(() => {
     return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
+      previewFiles.forEach((previewFile) => URL.revokeObjectURL(previewFile.previewUrl));
     };
-  }, [previewUrl]);
+  }, [previewFiles]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] ?? null;
-    setSelectedFile(file);
+    const files = Array.from(event.target.files ?? []);
     setError('');
 
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
+    previewFiles.forEach((previewFile) => URL.revokeObjectURL(previewFile.previewUrl));
 
-    if (!file) {
-      setPreviewUrl('');
+    if (files.length === 0) {
+      setSelectedFiles([]);
+      setPreviewFiles([]);
       return;
     }
 
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
+    setSelectedFiles(files);
+    setPreviewFiles(
+      files.map((file) => ({
+        file,
+        previewUrl: URL.createObjectURL(file),
+      })),
+    );
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!guestName.trim() || !selectedFile) {
-      setError('Please enter your name and choose a photo before uploading.');
+    if (!guestName.trim() || selectedFiles.length === 0) {
+      setError('Please enter your name and choose at least one photo before uploading.');
       return;
     }
 
@@ -62,11 +68,11 @@ export function GuestPhotoUploadPage() {
     setError('');
 
     try {
-      const upload = await createGuestPhotoUpload({
+      const uploads = await createGuestPhotoUploads({
         guestName,
-        file: selectedFile,
+        files: selectedFiles,
       });
-      navigate(`/guest-photos/${upload.id}`);
+      navigate(`/guest-photos?uploaded=${uploads.length}`);
     } catch (submitError) {
       setError(
         submitError instanceof Error
@@ -163,18 +169,47 @@ export function GuestPhotoUploadPage() {
                     className="mt-2 text-sm"
                     style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
                   >
-                    JPG, PNG, or HEIC snapshots work best
+                    Select one or more JPG, PNG, or HEIC snapshots
                   </span>
                 </label>
                 <input
                   id="photoUpload"
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleFileChange}
                   className="sr-only"
                   disabled={!isConfigured}
                 />
               </div>
+
+              {previewFiles.length > 0 && (
+                <div className="rounded-[1.5rem] bg-stone-50 p-4">
+                  <p
+                    className="mb-4 text-sm uppercase tracking-[0.18em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                  >
+                    Selected photos: {previewFiles.length}
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    {previewFiles.map((previewFile) => (
+                      <div key={`${previewFile.file.name}-${previewFile.file.lastModified}`} className="overflow-hidden rounded-2xl bg-white shadow-sm">
+                        <img
+                          src={previewFile.previewUrl}
+                          alt={previewFile.file.name}
+                          className="h-28 w-full object-cover"
+                        />
+                        <p
+                          className="truncate px-3 py-2 text-xs"
+                          style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
+                        >
+                          {previewFile.file.name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div
@@ -191,7 +226,7 @@ export function GuestPhotoUploadPage() {
                 className="inline-flex w-full items-center justify-center rounded-full px-6 py-4 text-sm uppercase tracking-[0.2em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 style={{ backgroundColor: '#8b6f47', fontFamily: "'Lora', serif" }}
               >
-                {isSubmitting ? 'Uploading...' : 'Upload photo'}
+                {isSubmitting ? 'Uploading...' : `Upload ${selectedFiles.length > 1 ? `${selectedFiles.length} photos` : 'photo'}`}
               </button>
 
               {!isConfigured && (
@@ -224,8 +259,8 @@ export function GuestPhotoUploadPage() {
             </div>
 
             <div className="overflow-hidden rounded-[1.5rem] bg-white shadow-inner">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Selected preview" className="h-[28rem] w-full object-cover" />
+              {previewFiles[0] ? (
+                <img src={previewFiles[0].previewUrl} alt="Selected preview" className="h-[28rem] w-full object-cover" />
               ) : (
                 <div className="flex h-[28rem] items-center justify-center bg-[radial-gradient(circle_at_top,#f2e8dc,transparent_55%),linear-gradient(180deg,#fffefb_0%,#f5efe5_100%)] px-8 text-center">
                   <div>
@@ -239,7 +274,7 @@ export function GuestPhotoUploadPage() {
                       className="mx-auto mt-4 max-w-md leading-7"
                       style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
                     >
-                      Select a photo, add your name, and submit it to create a trackable guest memory.
+                      Select one or more photos, add your name, and submit them to create trackable guest memories.
                     </p>
                   </div>
                 </div>
@@ -263,7 +298,7 @@ export function GuestPhotoUploadPage() {
                 className="mt-2 text-sm leading-7"
                 style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
               >
-                Guests still do not sign in manually. The app creates an anonymous Supabase session behind the scenes for uploads.
+                Guests still do not sign in manually. The app creates an anonymous Supabase session behind the scenes and can upload multiple photos under the same guest name.
               </p>
             </div>
           </div>
