@@ -2,5 +2,9 @@ export { HomePage } from './HomePage';
 export { OurStoryPage } from './OurStoryPage';
 export { EventDetailsPage } from './EventDetailsPage';
 export { RSVPPage } from './RSVPPage';
-export { GalleryPage } from './GalleryPage'
+export { GalleryPage } from './GalleryPage';
 export { ContactPage } from './ContactPage';
+export { WeddingInvitationPage } from './WeddingInvitationPage';
+export { GuestPhotoUploadPage } from './GuestPhotoUploadPage';
+export { GuestPhotoGalleryPage } from './GuestPhotoGalleryPage';
+export { GuestPhotoDetailPage } from './GuestPhotoDetailPage';
