@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Camera, ChevronLeft, Images, Upload } from 'lucide-react';
 import { createGuestPhotoUpload } from '../lib/guestPhotoStorage';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 export function GuestPhotoUploadPage() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export function GuestPhotoUploadPage() {
   const [previewUrl, setPreviewUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const isConfigured = isSupabaseConfigured();
 
   const uploadHint = useMemo(
     () => 'Share one of your favorite moments from the celebration and add your name so we know who captured it.',
@@ -48,6 +50,11 @@ export function GuestPhotoUploadPage() {
 
     if (!guestName.trim() || !selectedFile) {
       setError('Please enter your name and choose a photo before uploading.');
+      return;
+    }
+
+    if (!isConfigured) {
+      setError('Supabase is not configured yet. Add your project credentials in .env.local before accepting uploads.');
       return;
     }
 
@@ -165,6 +172,7 @@ export function GuestPhotoUploadPage() {
                   accept="image/*"
                   onChange={handleFileChange}
                   className="sr-only"
+                  disabled={!isConfigured}
                 />
               </div>
 
@@ -179,12 +187,21 @@ export function GuestPhotoUploadPage() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isConfigured}
                 className="inline-flex w-full items-center justify-center rounded-full px-6 py-4 text-sm uppercase tracking-[0.2em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 style={{ backgroundColor: '#8b6f47', fontFamily: "'Lora', serif" }}
               >
                 {isSubmitting ? 'Uploading...' : 'Upload photo'}
               </button>
+
+              {!isConfigured && (
+                <p
+                  className="text-sm leading-7"
+                  style={{ fontFamily: "'Lora', serif", color: '#8f2d2d' }}
+                >
+                  Supabase is not configured yet. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local` first.
+                </p>
+              )}
             </form>
           </div>
 
@@ -246,7 +263,7 @@ export function GuestPhotoUploadPage() {
                 className="mt-2 text-sm leading-7"
                 style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
               >
-                This version works without sign-in. Guests only need a name and a photo to contribute.
+                Guests still do not sign in manually. The app creates an anonymous Supabase session behind the scenes for uploads.
               </p>
             </div>
           </div>

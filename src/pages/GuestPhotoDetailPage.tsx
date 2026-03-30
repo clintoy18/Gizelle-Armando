@@ -1,10 +1,84 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronLeft, Upload } from 'lucide-react';
 import { formatUploadDate, getGuestPhotoUploadById } from '../lib/guestPhotoStorage';
+import type { GuestPhotoUpload } from '../lib/guestPhotoStorage';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 export function GuestPhotoDetailPage() {
   const { uploadId = '' } = useParams();
-  const upload = getGuestPhotoUploadById(uploadId);
+  const [upload, setUpload] = useState<GuestPhotoUpload | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      setError('Supabase is not configured yet. Add your project credentials in .env.local to load shared guest uploads.');
+      setIsLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadUpload = async () => {
+      try {
+        const data = await getGuestPhotoUploadById(uploadId);
+        if (isMounted) {
+          setUpload(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError instanceof Error ? loadError.message : 'Unable to load this guest photo right now.');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadUpload();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [uploadId]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f5ede2_100%)]">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
+          <h1
+            className="text-4xl"
+            style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+          >
+            Loading guest photo
+          </h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f5ede2_100%)]">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
+          <h1
+            className="text-4xl"
+            style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+          >
+            Guest photo unavailable
+          </h1>
+          <p
+            className="mx-auto mt-5 max-w-xl leading-8"
+            style={{ fontFamily: "'Lora', serif", color: '#8f2d2d' }}
+          >
+            {error}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!upload) {
     return (
@@ -26,7 +100,7 @@ export function GuestPhotoDetailPage() {
             className="mx-auto mt-5 max-w-xl leading-8"
             style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
           >
-            It may have been removed from this browser or was never uploaded on this device.
+            It may have been removed or the link may no longer be valid.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
@@ -75,7 +149,7 @@ export function GuestPhotoDetailPage() {
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="overflow-hidden rounded-[2rem] bg-white shadow-sm">
             <img
-              src={upload.imageDataUrl}
+              src={upload.imageUrl}
               alt={`Uploaded by ${upload.guestName}`}
               className="h-full max-h-[80vh] w-full object-cover"
             />

@@ -1,14 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, Images, Upload } from 'lucide-react';
-import {
-  formatUploadDate,
-  getGuestPhotoUploads,
-} from '../lib/guestPhotoStorage';
+import { formatUploadDate, getGuestPhotoUploads } from '../lib/guestPhotoStorage';
 import type { GuestPhotoUpload } from '../lib/guestPhotoStorage';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 export function GuestPhotoGalleryPage() {
-  const [uploads] = useState<GuestPhotoUpload[]>(() => getGuestPhotoUploads());
+  const [uploads, setUploads] = useState<GuestPhotoUpload[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      setError('Supabase is not configured yet. Add your project credentials in .env.local to load the shared gallery.');
+      setIsLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadUploads = async () => {
+      try {
+        const data = await getGuestPhotoUploads();
+        if (isMounted) {
+          setUploads(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError instanceof Error ? loadError.message : 'Unable to load guest uploads right now.');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadUploads();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f5ede2_100%)]">
@@ -54,7 +87,31 @@ export function GuestPhotoGalleryPage() {
           </p>
         </div>
 
-        {uploads.length === 0 ? (
+        {error ? (
+          <div className="rounded-[2rem] border border-rose-200 bg-white px-8 py-16 text-center shadow-sm">
+            <h2
+              className="text-3xl"
+              style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+            >
+              Gallery unavailable
+            </h2>
+            <p
+              className="mx-auto mt-4 max-w-2xl leading-8"
+              style={{ fontFamily: "'Lora', serif", color: '#8f2d2d' }}
+            >
+              {error}
+            </p>
+          </div>
+        ) : isLoading ? (
+          <div className="rounded-[2rem] border border-stone-200 bg-white px-8 py-16 text-center shadow-sm">
+            <h2
+              className="text-3xl"
+              style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+            >
+              Loading guest uploads
+            </h2>
+          </div>
+        ) : uploads.length === 0 ? (
           <div className="rounded-[2rem] border border-stone-200 bg-white px-8 py-16 text-center shadow-sm">
             <div className="mx-auto mb-6 w-fit rounded-full bg-stone-100 p-4">
               <Images className="h-8 w-8" style={{ color: '#8b6f47' }} />
@@ -82,7 +139,7 @@ export function GuestPhotoGalleryPage() {
               >
                 <div className="relative h-80 overflow-hidden">
                   <img
-                    src={upload.imageDataUrl}
+                    src={upload.imageUrl}
                     alt={`Uploaded by ${upload.guestName}`}
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                   />
