@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, Images, Upload } from 'lucide-react';
-import { formatUploadDate, getGuestPhotoUploads } from '../lib/guestPhotoStorage';
-import type { GuestPhotoUpload } from '../lib/guestPhotoStorage';
+import { formatUploadDate, getGuestPhotoBatches } from '../lib/guestPhotoStorage';
+import type { GuestPhotoBatch } from '../lib/guestPhotoStorage';
 import { isSupabaseConfigured } from '../lib/supabase';
 
 export function GuestPhotoGalleryPage() {
   const [searchParams] = useSearchParams();
-  const [uploads, setUploads] = useState<GuestPhotoUpload[]>([]);
+  const [batches, setBatches] = useState<GuestPhotoBatch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const uploadedCount = Number(searchParams.get('uploaded') ?? '0');
@@ -21,11 +21,11 @@ export function GuestPhotoGalleryPage() {
 
     let isMounted = true;
 
-    const loadUploads = async () => {
+    const loadBatches = async () => {
       try {
-        const data = await getGuestPhotoUploads();
+        const data = await getGuestPhotoBatches();
         if (isMounted) {
-          setUploads(data);
+          setBatches(data);
         }
       } catch (loadError) {
         if (isMounted) {
@@ -38,7 +38,7 @@ export function GuestPhotoGalleryPage() {
       }
     };
 
-    void loadUploads();
+    void loadBatches();
 
     return () => {
       isMounted = false;
@@ -64,7 +64,7 @@ export function GuestPhotoGalleryPage() {
             style={{ backgroundColor: '#8b6f47', fontFamily: "'Lora', serif" }}
           >
             <Upload className="h-4 w-4" />
-            Upload a photo
+            Upload a photo set
           </Link>
         </div>
 
@@ -85,7 +85,7 @@ export function GuestPhotoGalleryPage() {
             className="mx-auto mt-5 max-w-2xl text-base leading-8 sm:text-lg"
             style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
           >
-            Browse the moments captured throughout the celebration. Each card links to its own page so every upload can be viewed on its own.
+            Each card is one guest album. Open it to swipe through the full set that guest uploaded together.
           </p>
         </div>
 
@@ -95,13 +95,13 @@ export function GuestPhotoGalleryPage() {
               className="text-sm uppercase tracking-[0.18em]"
               style={{ fontFamily: "'Lora', serif", color: '#2f6b52' }}
             >
-              Upload complete
+              Album uploaded
             </p>
             <p
               className="mt-2 text-base"
               style={{ fontFamily: "'Lora', serif", color: '#2d2926' }}
             >
-              {uploadedCount} {uploadedCount === 1 ? 'photo has' : 'photos have'} been added to the guest wall.
+              Your guest album now contains {uploadedCount} photo{uploadedCount === 1 ? '' : 's'}.
             </p>
           </div>
         )}
@@ -127,10 +127,10 @@ export function GuestPhotoGalleryPage() {
               className="text-3xl"
               style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
             >
-              Loading guest uploads
+              Loading guest albums
             </h2>
           </div>
-        ) : uploads.length === 0 ? (
+        ) : batches.length === 0 ? (
           <div className="rounded-[2rem] border border-stone-200 bg-white px-8 py-16 text-center shadow-sm">
             <div className="mx-auto mb-6 w-fit rounded-full bg-stone-100 p-4">
               <Images className="h-8 w-8" style={{ color: '#8b6f47' }} />
@@ -139,7 +139,7 @@ export function GuestPhotoGalleryPage() {
               className="text-3xl"
               style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
             >
-              No guest uploads yet
+              No guest albums yet
             </h2>
             <p
               className="mx-auto mt-4 max-w-lg leading-8"
@@ -150,38 +150,44 @@ export function GuestPhotoGalleryPage() {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {uploads.map((upload) => (
+            {batches.map((batch) => (
               <Link
-                key={upload.id}
-                to={`/guest-photos/${upload.id}`}
+                key={batch.id}
+                to={`/guest-photos/${batch.id}`}
                 className="group overflow-hidden rounded-[1.75rem] border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="relative h-80 overflow-hidden">
                   <img
-                    src={upload.imageUrl}
-                    alt={`Uploaded by ${upload.guestName}`}
+                    src={batch.coverImageUrl}
+                    alt={`Uploaded by ${batch.guestName}`}
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div
+                    className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs uppercase tracking-[0.16em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#2d2926' }}
+                  >
+                    {batch.photoCount} photo{batch.photoCount === 1 ? '' : 's'}
+                  </div>
                 </div>
                 <div className="p-6">
                   <p
                     className="text-sm uppercase tracking-[0.18em]"
                     style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
                   >
-                    Uploaded by
+                    Album by
                   </p>
                   <h2
                     className="mt-2 text-2xl"
                     style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
                   >
-                    {upload.guestName}
+                    {batch.guestName}
                   </h2>
                   <p
                     className="mt-3 text-sm"
                     style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
                   >
-                    {formatUploadDate(upload.createdAt)}
+                    {formatUploadDate(batch.createdAt)}
                   </p>
                 </div>
               </Link>

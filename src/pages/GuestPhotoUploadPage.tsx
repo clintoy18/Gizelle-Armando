@@ -20,7 +20,7 @@ export function GuestPhotoUploadPage() {
   const isConfigured = isSupabaseConfigured();
 
   const uploadHint = useMemo(
-    () => 'Share one of your favorite moments from the celebration and add your name so we know who captured it.',
+    () => 'Share your favorite wedding moments as one set. Your photos will stay grouped together under your name.',
     [],
   );
 
@@ -68,16 +68,16 @@ export function GuestPhotoUploadPage() {
     setError('');
 
     try {
-      const uploads = await createGuestPhotoUploads({
+      const batch = await createGuestPhotoUploads({
         guestName,
         files: selectedFiles,
       });
-      navigate(`/guest-photos?uploaded=${uploads.length}`);
+      navigate(`/guest-photos/${batch.id}?uploaded=${batch.photoCount}`);
     } catch (submitError) {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : 'Unable to save this photo right now. Please try again.',
+          : 'Unable to save this photo set right now. Please try again.',
       );
       setIsSubmitting(false);
     }
@@ -118,7 +118,7 @@ export function GuestPhotoUploadPage() {
               className="mb-5 text-4xl sm:text-5xl"
               style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
             >
-              Upload Your Wedding Photos
+              Upload a Photo Set
             </h1>
             <p
               className="max-w-xl text-base leading-8 sm:text-lg"
@@ -152,7 +152,7 @@ export function GuestPhotoUploadPage() {
                   className="mb-2 block text-sm uppercase tracking-[0.18em]"
                   style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
                 >
-                  Select photo
+                  Select photos
                 </label>
                 <label
                   htmlFor="photoUpload"
@@ -163,13 +163,13 @@ export function GuestPhotoUploadPage() {
                     className="text-lg"
                     style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
                   >
-                    Tap to browse your photos
+                    Tap to choose your photos
                   </span>
                   <span
                     className="mt-2 text-sm"
                     style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
                   >
-                    Select one or more JPG, PNG, or HEIC snapshots
+                    The selected photos will be grouped together in one guest album
                   </span>
                 </label>
                 <input
@@ -189,10 +189,10 @@ export function GuestPhotoUploadPage() {
                     className="mb-4 text-sm uppercase tracking-[0.18em]"
                     style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
                   >
-                    Selected photos: {previewFiles.length}
+                    Album photos: {previewFiles.length}
                   </p>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {previewFiles.map((previewFile) => (
+                    {previewFiles.map((previewFile, index) => (
                       <div key={`${previewFile.file.name}-${previewFile.file.lastModified}`} className="overflow-hidden rounded-2xl bg-white shadow-sm">
                         <img
                           src={previewFile.previewUrl}
@@ -200,10 +200,16 @@ export function GuestPhotoUploadPage() {
                           className="h-28 w-full object-cover"
                         />
                         <p
-                          className="truncate px-3 py-2 text-xs"
+                          className="truncate px-3 pt-2 text-xs"
                           style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
                         >
                           {previewFile.file.name}
+                        </p>
+                        <p
+                          className="px-3 pb-2 text-[10px] uppercase tracking-[0.18em]"
+                          style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                        >
+                          Photo {index + 1}
                         </p>
                       </div>
                     ))}
@@ -226,7 +232,7 @@ export function GuestPhotoUploadPage() {
                 className="inline-flex w-full items-center justify-center rounded-full px-6 py-4 text-sm uppercase tracking-[0.2em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 style={{ backgroundColor: '#8b6f47', fontFamily: "'Lora', serif" }}
               >
-                {isSubmitting ? 'Uploading...' : `Upload ${selectedFiles.length > 1 ? `${selectedFiles.length} photos` : 'photo'}`}
+                {isSubmitting ? 'Uploading...' : `Create album with ${selectedFiles.length > 0 ? selectedFiles.length : 0} photo${selectedFiles.length === 1 ? '' : 's'}`}
               </button>
 
               {!isConfigured && (
@@ -250,10 +256,10 @@ export function GuestPhotoUploadPage() {
                   className="text-sm uppercase tracking-[0.18em]"
                   style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
                 >
-                  Preview
+                  Album preview
                 </p>
                 <p style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}>
-                  Guests will see your name with the uploaded image.
+                  Guests will open one card and swipe through your full set.
                 </p>
               </div>
             </div>
@@ -268,13 +274,13 @@ export function GuestPhotoUploadPage() {
                       className="text-3xl"
                       style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
                     >
-                      Your moment will appear here
+                      Your album cover will appear here
                     </p>
                     <p
                       className="mx-auto mt-4 max-w-md leading-7"
                       style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
                     >
-                      Select one or more photos, add your name, and submit them to create trackable guest memories.
+                      Select one or more photos, add your name, and upload them as a single grouped memory set.
                     </p>
                   </div>
                 </div>
@@ -298,7 +304,7 @@ export function GuestPhotoUploadPage() {
                 className="mt-2 text-sm leading-7"
                 style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
               >
-                Guests still do not sign in manually. The app creates an anonymous Supabase session behind the scenes and can upload multiple photos under the same guest name.
+                Each upload creates one album card, even if the guest adds several photos.
               </p>
             </div>
           </div>

@@ -1,16 +1,19 @@
 import { GUEST_PHOTO_BUCKET, getSupabaseClient } from './supabase';
 
-export interface GuestPhotoUpload {
+export interface GuestPhotoItem {
   id: string;
-  guestName: string;
   imageUrl: string;
-  createdAt: string;
   fileName: string;
+  sortOrder: number;
 }
 
-interface CreateGuestPhotoUploadInput {
+export interface GuestPhotoBatch {
+  id: string;
   guestName: string;
-  file: File;
+  createdAt: string;
+  coverImageUrl: string;
+  photoCount: number;
+  photos: GuestPhotoItem[];
 }
 
 interface CreateGuestPhotoUploadsInput {
@@ -18,12 +21,18 @@ interface CreateGuestPhotoUploadsInput {
   files: File[];
 }
 
-interface GuestPhotoUploadRow {
+interface GuestPhotoBatchRow {
   id: string;
   guest_name: string;
+  created_at: string;
+  photos: GuestPhotoItemRow[];
+}
+
+interface GuestPhotoItemRow {
+  id: string;
   storage_path: string;
   file_name: string;
-  created_at: string;
+  sort_order: number;
 }
 
 const MAX_IMAGE_WIDTH = 1600;
@@ -80,27 +89,58 @@ async function compressImage(file: File): Promise<Blob> {
   });
 }
 
-function mapUploadRow(row: GuestPhotoUploadRow): GuestPhotoUpload {
-  const { data } = getSupabaseClient().storage.from(GUEST_PHOTO_BUCKET).getPublicUrl(row.storage_path);
+function createPublicImageUrl(storagePath: string) {
+  const { data } = getSupabaseClient().storage.from(GUEST_PHOTO_BUCKET).getPublicUrl(storagePath);
+  return data.publicUrl;
+}
+
+function mapPhotoItem(row: GuestPhotoItemRow): GuestPhotoItem {
+  return {
+    id: row.id,
+    imageUrl: createPublicImageUrl(row.storage_path),
+    fileName: row.file_name,
+    sortOrder: row.sort_order,
+  };
+}
+
+function mapBatchRow(row: GuestPhotoBatchRow): GuestPhotoBatch {
+  const photos = [...(row.photos ?? [])]
+    .sort((left, right) => left.sort_order - right.sort_order)
+    .map(mapPhotoItem);
 
   return {
     id: row.id,
     guestName: row.guest_name,
-    imageUrl: data.publicUrl,
     createdAt: row.created_at,
-    fileName: row.file_name,
+    coverImageUrl: photos[0]?.imageUrl ?? '',
+    photoCount: photos.length,
+    photos,
   };
 }
 
 async function isImageUrlAvailable(imageUrl: string): Promise<boolean> {
   try {
-    const response = await fetch(imageUrl, {
-      method: 'HEAD',
-    });
+    const response = await fetch(imageUrl, { method: 'HEAD' });
     return response.ok;
   } catch {
     return false;
   }
+}
+
+async function filterMissingPhotos(batch: GuestPhotoBatch): Promise<GuestPhotoBatch | null> {
+  const availability = await Promise.all(batch.photos.map((photo) => isImageUrlAvailable(photo.imageUrl)));
+  const photos = batch.photos.filter((_, index) => availability[index]);
+
+  if (photos.length === 0) {
+    return null;
+  }
+
+  return {
+    ...batch,
+    photos,
+    photoCount: photos.length,
+    coverImageUrl: photos[0].imageUrl,
+  };
 }
 
 async function ensureAnonymousSession() {
@@ -121,29 +161,32 @@ async function ensureAnonymousSession() {
   return data.user;
 }
 
-export async function getGuestPhotoUploads(): Promise<GuestPhotoUpload[]> {
+export async function getGuestPhotoBatches(): Promise<GuestPhotoBatch[]> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
-    .from('guest_photo_uploads')
-    .select('id, guest_name, storage_path, file_name, created_at')
+    .from('guest_photo_batches')
+    .select(
+      'id, guest_name, created_at, photos:guest_photo_items(id, storage_path, file_name, sort_order)',
+    )
     .order('created_at', { ascending: false });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  const uploads = (data ?? []).map((row) => mapUploadRow(row as GuestPhotoUploadRow));
-  const availability = await Promise.all(uploads.map((upload) => isImageUrlAvailable(upload.imageUrl)));
-
-  return uploads.filter((_, index) => availability[index]);
+  const mappedBatches = (data ?? []).map((row) => mapBatchRow(row as GuestPhotoBatchRow));
+  const filteredBatches = await Promise.all(mappedBatches.map(filterMissingPhotos));
+  return filteredBatches.filter((batch): batch is GuestPhotoBatch => batch !== null);
 }
 
-export async function getGuestPhotoUploadById(uploadId: string): Promise<GuestPhotoUpload | null> {
+export async function getGuestPhotoBatchById(batchId: string): Promise<GuestPhotoBatch | null> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
-    .from('guest_photo_uploads')
-    .select('id, guest_name, storage_path, file_name, created_at')
-    .eq('id', uploadId)
+    .from('guest_photo_batches')
+    .select(
+      'id, guest_name, created_at, photos:guest_photo_items(id, storage_path, file_name, sort_order)',
+    )
+    .eq('id', batchId)
     .maybeSingle();
 
   if (error) {
@@ -154,36 +197,32 @@ export async function getGuestPhotoUploadById(uploadId: string): Promise<GuestPh
     return null;
   }
 
-  const upload = mapUploadRow(data as GuestPhotoUploadRow);
-  const isAvailable = await isImageUrlAvailable(upload.imageUrl);
-  return isAvailable ? upload : null;
-}
-
-export async function createGuestPhotoUpload({
-  guestName,
-  file,
-}: CreateGuestPhotoUploadInput): Promise<GuestPhotoUpload> {
-  const [upload] = await createGuestPhotoUploads({
-    guestName,
-    files: [file],
-  });
-
-  return upload;
+  return filterMissingPhotos(mapBatchRow(data as GuestPhotoBatchRow));
 }
 
 export async function createGuestPhotoUploads({
   guestName,
   files,
-}: CreateGuestPhotoUploadsInput): Promise<GuestPhotoUpload[]> {
+}: CreateGuestPhotoUploadsInput): Promise<GuestPhotoBatch> {
   const supabase = getSupabaseClient();
   const user = await ensureAnonymousSession();
-  const createdUploads: GuestPhotoUpload[] = [];
+  const batchId = crypto.randomUUID();
 
-  for (const file of files) {
-    const uploadId = crypto.randomUUID();
+  const { error: batchError } = await supabase.from('guest_photo_batches').insert({
+    id: batchId,
+    user_id: user.id,
+    guest_name: guestName.trim(),
+  });
+
+  if (batchError) {
+    throw new Error(batchError.message);
+  }
+
+  for (const [index, file] of files.entries()) {
+    const itemId = crypto.randomUUID();
     const compressedImage = await compressImage(file);
     const sanitizedFileName = file.name.replace(/\s+/g, '-').toLowerCase();
-    const storagePath = `${user.id}/${uploadId}-${sanitizedFileName}.jpg`;
+    const storagePath = `${user.id}/${batchId}/${index + 1}-${itemId}-${sanitizedFileName}.jpg`;
 
     const { error: uploadError } = await supabase.storage
       .from(GUEST_PHOTO_BUCKET)
@@ -197,26 +236,25 @@ export async function createGuestPhotoUploads({
       throw new Error(uploadError.message);
     }
 
-    const { data, error } = await supabase
-      .from('guest_photo_uploads')
-      .insert({
-        id: uploadId,
-        user_id: user.id,
-        guest_name: guestName.trim(),
-        storage_path: storagePath,
-        file_name: file.name,
-      })
-      .select('id, guest_name, storage_path, file_name, created_at')
-      .single();
+    const { error: itemError } = await supabase.from('guest_photo_items').insert({
+      id: itemId,
+      batch_id: batchId,
+      storage_path: storagePath,
+      file_name: file.name,
+      sort_order: index,
+    });
 
-    if (error) {
-      throw new Error(error.message);
+    if (itemError) {
+      throw new Error(itemError.message);
     }
-
-    createdUploads.push(mapUploadRow(data as GuestPhotoUploadRow));
   }
 
-  return createdUploads;
+  const createdBatch = await getGuestPhotoBatchById(batchId);
+  if (!createdBatch) {
+    throw new Error('Unable to load the uploaded photo batch.');
+  }
+
+  return createdBatch;
 }
 
 export function formatUploadDate(createdAt: string): string {
