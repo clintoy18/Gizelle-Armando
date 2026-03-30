@@ -92,6 +92,17 @@ function mapUploadRow(row: GuestPhotoUploadRow): GuestPhotoUpload {
   };
 }
 
+async function isImageUrlAvailable(imageUrl: string): Promise<boolean> {
+  try {
+    const response = await fetch(imageUrl, {
+      method: 'HEAD',
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function ensureAnonymousSession() {
   const supabase = getSupabaseClient();
   const {
@@ -121,7 +132,10 @@ export async function getGuestPhotoUploads(): Promise<GuestPhotoUpload[]> {
     throw new Error(error.message);
   }
 
-  return (data ?? []).map((row) => mapUploadRow(row as GuestPhotoUploadRow));
+  const uploads = (data ?? []).map((row) => mapUploadRow(row as GuestPhotoUploadRow));
+  const availability = await Promise.all(uploads.map((upload) => isImageUrlAvailable(upload.imageUrl)));
+
+  return uploads.filter((_, index) => availability[index]);
 }
 
 export async function getGuestPhotoUploadById(uploadId: string): Promise<GuestPhotoUpload | null> {
@@ -136,7 +150,13 @@ export async function getGuestPhotoUploadById(uploadId: string): Promise<GuestPh
     throw new Error(error.message);
   }
 
-  return data ? mapUploadRow(data as GuestPhotoUploadRow) : null;
+  if (!data) {
+    return null;
+  }
+
+  const upload = mapUploadRow(data as GuestPhotoUploadRow);
+  const isAvailable = await isImageUrlAvailable(upload.imageUrl);
+  return isAvailable ? upload : null;
 }
 
 export async function createGuestPhotoUpload({
