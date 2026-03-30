@@ -50,7 +50,7 @@ export function Intro({ onComplete }: IntroProps) {
           className="mb-12 text-[10px] md:text-xs tracking-[0.4em] uppercase opacity-70 transition-all duration-700"
           style={{ fontFamily: "'Lora', serif", color: colors.primary }}
         >
-          December Fifteenth • Two Thousand Twenty Five
+          April Twenty-Ninth • Two Thousand Twenty-Six
         </p>
 
         {/* Main Typography Block */}

@@ -27,7 +27,7 @@ export function Footer() {
               letterSpacing: '0.1em'
             }}
           >
-            DECEMBER 15, 2024
+            APRIL 29, 2026
           </p>
         </div>
 
