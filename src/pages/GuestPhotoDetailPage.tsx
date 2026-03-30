@@ -50,7 +50,7 @@ export function GuestPhotoDetailPage() {
   }, [uploadId]);
 
   useEffect(() => {
-    if (!batch || batch.photoCount <= 1) {
+    if (!batch) {
       return;
     }
 
@@ -426,21 +426,6 @@ export function GuestPhotoDetailPage() {
                       {activeIndex + 1}
                     </p>
                   </div>
-                </div>
-
-                <div className="rounded-[1.5rem] bg-stone-50 px-5 py-4">
-                  <p
-                    className="text-xs uppercase tracking-[0.22em]"
-                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
-                  >
-                    Current filename
-                  </p>
-                  <p
-                    className="mt-2 break-all text-sm leading-7"
-                    style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
-                  >
-                    {activePhoto.fileName}
-                  </p>
                 </div>
 
                 <div className="rounded-[1.5rem] border border-stone-200 bg-white px-5 py-4">
