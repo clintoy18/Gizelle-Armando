@@ -1,6 +1,7 @@
 import { Section } from '../components/common';
 import { Heart, Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export function RSVPPage() {
   const attireColors = [
@@ -24,6 +25,10 @@ export function RSVPPage() {
       description: 'Please do not forward, repost, or distribute this wedding invitation without permission.',
     },
   ];
+  const uploadUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/guest-upload`
+      : 'https://your-wedding-site.com/guest-upload';
 
   return (
     <Section bgColor="white" className="py-16 sm:py-20 md:py-24">
@@ -287,13 +292,49 @@ export function RSVPPage() {
                 color: '#5a5a5a'
               }}
             >
-              Scan the QR code with your smartphone and upload your favorites!
+              Scan the QR code with your smartphone or tap below to upload your favorites to our guest photo wall.
             </p>
 
-            <div className="mt-8 p-6 bg-white rounded-lg inline-block border-2 border-stone-300">
-              <div className="w-32 h-32 bg-stone-200 rounded flex items-center justify-center">
-                <span style={{ color: '#8b6f47' }}>QR Code</span>
-              </div>
+            <div className="mt-8 inline-block rounded-3xl border-2 border-stone-300 bg-white p-6 shadow-sm">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(uploadUrl)}`}
+                alt="QR code linking to the guest photo upload page"
+                className="h-40 w-40 rounded-xl"
+              />
+            </div>
+
+            <p
+              className="mt-4 break-all text-sm"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: '#8b6f47'
+              }}
+            >
+              {uploadUrl}
+            </p>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                to="/guest-upload"
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm uppercase tracking-[0.18em] text-white transition hover:opacity-90"
+                style={{
+                  backgroundColor: '#8b6f47',
+                  fontFamily: "'Lora', serif"
+                }}
+              >
+                Upload a Photo
+              </Link>
+              <Link
+                to="/guest-photos"
+                className="inline-flex items-center justify-center rounded-full border px-6 py-3 text-sm uppercase tracking-[0.18em] transition hover:bg-stone-100"
+                style={{
+                  borderColor: '#d7cab8',
+                  color: '#2d2926',
+                  fontFamily: "'Lora', serif"
+                }}
+              >
+                View Guest Gallery
+              </Link>
             </div>
 
             <p
