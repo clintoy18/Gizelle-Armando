@@ -10,6 +10,20 @@ export function RSVPPage() {
     { name: 'Cream', hex: '#FFFDD0' },
     { name: 'Beige', hex: '#F5F5DC' },
   ];
+  const reminders = [
+    {
+      title: 'No Plus Ones',
+      description: 'Our celebration is reserved for the guests named on the invitation only.',
+    },
+    {
+      title: 'Celebrate With Us Fully',
+      description: 'We kindly ask guests to stay and share in the ceremony and reception, not just the meal.',
+    },
+    {
+      title: 'Keep This Invitation Private',
+      description: 'Please do not forward, repost, or distribute this wedding invitation without permission.',
+    },
+  ];
 
   return (
     <Section bgColor="white" className="py-16 sm:py-20 md:py-24">
@@ -96,6 +110,57 @@ export function RSVPPage() {
           >
             Please message us to confirm your attendance.
           </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.25 }}
+          className="mb-12"
+        >
+          <h3
+            className="text-3xl sm:text-4xl text-center mb-8"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#2d2926',
+              letterSpacing: '0.1em'
+            }}
+          >
+            Rules & Reminders
+          </h3>
+
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
+            {reminders.map((reminder) => (
+              <div
+                key={reminder.title}
+                className="rounded-2xl border p-6 sm:p-7 shadow-sm"
+                style={{
+                  background: 'linear-gradient(135deg, #f8f4ef 0%, #fffdf9 100%)',
+                  borderColor: '#e7ddd0'
+                }}
+              >
+                <p
+                  className="text-lg sm:text-xl mb-3 text-center"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    color: '#8b6f47'
+                  }}
+                >
+                  {reminder.title}
+                </p>
+                <p
+                  className="text-sm sm:text-base leading-relaxed text-center"
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    color: '#5a5a5a'
+                  }}
+                >
+                  {reminder.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Attire Section */}

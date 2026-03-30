@@ -71,6 +71,16 @@ export function Footer() {
           #GIZELLEctedByGodForARMANDO
         </p>
 
+        <p
+          className="max-w-2xl mx-auto text-xs sm:text-sm mb-8 leading-relaxed"
+          style={{
+            fontFamily: "'Lora', serif",
+            color: 'hsl(var(--wedding-cream) / 0.75)'
+          }}
+        >
+          This invitation is intended only for the invited guest list. Please keep it private and do not forward or distribute it without the couple&apos;s permission.
+        </p>
+
         {/* Copyright */}
         <p 
           className="text-xs sm:text-sm pt-8 border-t border-stone-400/20"
