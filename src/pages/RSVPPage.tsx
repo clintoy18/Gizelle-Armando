@@ -338,7 +338,7 @@ export function RSVPPage() {
             </div>
 
             <p
-              className="text-lg sm:text-xl mt-8 font-light tracking-widest"
+              className="mx-auto mt-8 max-w-full break-words px-2 text-sm font-light leading-relaxed sm:text-lg"
               style={{
                 fontFamily: "'Lora', serif",
                 color: '#8b6f47',
