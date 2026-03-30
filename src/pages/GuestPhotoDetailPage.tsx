@@ -49,6 +49,29 @@ export function GuestPhotoDetailPage() {
     };
   }, [uploadId]);
 
+  useEffect(() => {
+    if (!batch || batch.photoCount <= 1) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        setActiveIndex((currentIndex) =>
+          currentIndex === 0 ? batch.photos.length - 1 : currentIndex - 1,
+        );
+      }
+
+      if (event.key === 'ArrowRight') {
+        setActiveIndex((currentIndex) =>
+          currentIndex === batch.photos.length - 1 ? 0 : currentIndex + 1,
+        );
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [batch]);
+
   const goToPrevious = () => {
     if (!batch) {
       return;
@@ -149,10 +172,11 @@ export function GuestPhotoDetailPage() {
   }
 
   const activePhoto = batch.photos[activeIndex];
+  const progressWidth = `${((activeIndex + 1) / batch.photoCount) * 100}%`;
 
   return (
-    <div className="min-h-screen bg-[#fcf8f2]">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#f7efe2_0%,#fcf8f2_40%,#f3ebdf_100%)]">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/guest-photos"
@@ -190,10 +214,51 @@ export function GuestPhotoDetailPage() {
           </div>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="overflow-hidden rounded-[2rem] bg-white shadow-sm">
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.45fr)_24rem]">
+          <section className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/80 shadow-[0_24px_80px_rgba(56,40,24,0.14)] backdrop-blur">
+            <div className="border-b border-stone-200/70 px-5 py-5 sm:px-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p
+                    className="text-xs uppercase tracking-[0.35em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                  >
+                    Guest Album
+                  </p>
+                  <h1
+                    className="mt-2 text-3xl sm:text-4xl"
+                    style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+                  >
+                    {batch.guestName}
+                  </h1>
+                </div>
+
+                <div className="text-right">
+                  <p
+                    className="text-xs uppercase tracking-[0.22em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                  >
+                    Viewing
+                  </p>
+                  <p
+                    className="mt-2 text-lg"
+                    style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+                  >
+                    Photo {activeIndex + 1} of {batch.photoCount}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-stone-200">
+                <div
+                  className="h-full rounded-full transition-all duration-300"
+                  style={{ width: progressWidth, background: 'linear-gradient(90deg, #8b6f47 0%, #d8b789 100%)' }}
+                />
+              </div>
+            </div>
+
             <div
-              className="relative"
+              className="relative bg-[linear-gradient(180deg,rgba(57,42,24,0.06)_0%,rgba(57,42,24,0)_100%)] px-3 pb-3 pt-3 sm:px-5 sm:pb-5"
               onTouchStart={(event) => setTouchStartX(event.changedTouches[0].clientX)}
               onTouchEnd={(event) => {
                 if (touchStartX === null) {
@@ -210,18 +275,20 @@ export function GuestPhotoDetailPage() {
                 setTouchStartX(null);
               }}
             >
-              <img
-                src={activePhoto.imageUrl}
-                alt={`${batch.guestName} photo ${activeIndex + 1}`}
-                className="h-full max-h-[80vh] w-full object-cover"
-              />
+              <div className="relative overflow-hidden rounded-[1.6rem] bg-[#f4ecdf]">
+                <img
+                  src={activePhoto.imageUrl}
+                  alt={`${batch.guestName} photo ${activeIndex + 1}`}
+                  className="h-[50vh] w-full object-contain bg-[#f4ecdf] sm:h-[62vh] xl:h-[72vh]"
+                />
+              </div>
 
               {batch.photoCount > 1 && (
                 <>
                   <button
                     type="button"
                     onClick={goToPrevious}
-                    className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:bg-white"
+                    className="absolute left-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 shadow-lg transition hover:scale-105 hover:bg-white"
                     aria-label="Previous photo"
                   >
                     <ChevronLeft className="h-5 w-5" style={{ color: '#2d2926' }} />
@@ -229,7 +296,7 @@ export function GuestPhotoDetailPage() {
                   <button
                     type="button"
                     onClick={goToNext}
-                    className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:bg-white"
+                    className="absolute right-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 shadow-lg transition hover:scale-105 hover:bg-white"
                     aria-label="Next photo"
                   >
                     <ChevronRight className="h-5 w-5" style={{ color: '#2d2926' }} />
@@ -238,93 +305,158 @@ export function GuestPhotoDetailPage() {
               )}
 
               <div
-                className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-xs uppercase tracking-[0.16em] text-white"
+                className="absolute bottom-6 right-6 rounded-full bg-black/65 px-3 py-1 text-xs uppercase tracking-[0.16em] text-white"
                 style={{ fontFamily: "'Lora', serif" }}
               >
                 {activeIndex + 1} / {batch.photoCount}
               </div>
+
+              {batch.photoCount > 1 && (
+                <div
+                  className="absolute bottom-6 left-6 rounded-full bg-white/92 px-4 py-2 text-[10px] uppercase tracking-[0.22em] shadow-sm sm:text-xs"
+                  style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
+                >
+                  Swipe or use arrow keys
+                </div>
+              )}
             </div>
 
             {batch.photoCount > 1 && (
-              <div className="grid grid-cols-4 gap-2 border-t border-stone-200 bg-stone-50 p-3 sm:grid-cols-6">
-                {batch.photos.map((photo, index) => (
-                  <button
-                    key={photo.id}
-                    type="button"
-                    onClick={() => setActiveIndex(index)}
-                    className={`overflow-hidden rounded-xl border-2 transition ${index === activeIndex ? 'border-amber-700' : 'border-transparent'}`}
+              <div className="border-t border-stone-200/70 bg-stone-50/90 px-3 py-4 sm:px-5">
+                <div className="mb-3 flex items-center justify-between gap-4">
+                  <p
+                    className="text-xs uppercase tracking-[0.22em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
                   >
-                    <img src={photo.imageUrl} alt={photo.fileName} className="h-20 w-full object-cover" />
-                  </button>
-                ))}
+                    Filmstrip
+                  </p>
+                  <p
+                    className="text-xs"
+                    style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
+                  >
+                    Tap any photo to jump
+                  </p>
+                </div>
+                <div className="hide-scrollbar flex gap-3 overflow-x-auto pb-1">
+                  {batch.photos.map((photo, index) => (
+                    <button
+                      key={photo.id}
+                      type="button"
+                      onClick={() => setActiveIndex(index)}
+                      className={`group shrink-0 overflow-hidden rounded-2xl border-[3px] bg-white transition ${index === activeIndex ? 'border-amber-700 shadow-md' : 'border-transparent hover:border-stone-300'}`}
+                    >
+                      <img src={photo.imageUrl} alt={photo.fileName} className="h-24 w-20 object-cover sm:h-28 sm:w-24" />
+                      <div
+                        className={`px-2 py-2 text-center text-[10px] uppercase tracking-[0.18em] ${index === activeIndex ? '' : 'opacity-70 group-hover:opacity-100'}`}
+                        style={{ fontFamily: "'Lora', serif", color: index === activeIndex ? '#8b6f47' : '#5a5a5a' }}
+                      >
+                        {index + 1}
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
-          </div>
+          </section>
 
-          <aside className="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm sm:p-10">
-            <p
-              className="text-sm uppercase tracking-[0.35em]"
-              style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
-            >
-              Guest Album
-            </p>
-            <h1
-              className="mt-4 text-4xl"
-              style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
-            >
-              {batch.guestName}
-            </h1>
-            <p
-              className="mt-4 text-base leading-8"
-              style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
-            >
-              Opened as one grouped upload set from Armando and Gizelle&apos;s wedding memory wall.
-            </p>
+          <aside className="xl:sticky xl:top-24 xl:self-start">
+            <div className="rounded-[2rem] border border-white/60 bg-white/88 p-8 shadow-[0_24px_80px_rgba(56,40,24,0.1)] backdrop-blur sm:p-10">
+              <p
+                className="text-sm uppercase tracking-[0.35em]"
+                style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+              >
+                Album Notes
+              </p>
+              <h2
+                className="mt-4 text-3xl"
+                style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+              >
+                {batch.guestName}
+              </h2>
+              <p
+                className="mt-4 text-base leading-8"
+                style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
+              >
+                A grouped guest submission from Armando and Gizelle&apos;s shared wedding memory wall.
+              </p>
 
-            <div className="mt-10 space-y-5 border-t border-stone-200 pt-8">
-              <div>
-                <p
-                  className="text-sm uppercase tracking-[0.18em]"
-                  style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
-                >
-                  Uploaded on
-                </p>
-                <p
-                  className="mt-2 text-lg"
-                  style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
-                >
-                  {formatUploadDate(batch.createdAt)}
-                </p>
-              </div>
+              <div className="mt-8 grid gap-4">
+                <div className="rounded-[1.5rem] bg-stone-50 px-5 py-4">
+                  <p
+                    className="text-xs uppercase tracking-[0.22em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                  >
+                    Uploaded on
+                  </p>
+                  <p
+                    className="mt-2 text-lg"
+                    style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+                  >
+                    {formatUploadDate(batch.createdAt)}
+                  </p>
+                </div>
 
-              <div>
-                <p
-                  className="text-sm uppercase tracking-[0.18em]"
-                  style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
-                >
-                  Total photos
-                </p>
-                <p
-                  className="mt-2 text-lg"
-                  style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
-                >
-                  {batch.photoCount}
-                </p>
-              </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-[1.5rem] bg-stone-50 px-5 py-4">
+                    <p
+                      className="text-xs uppercase tracking-[0.22em]"
+                      style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                    >
+                      Total photos
+                    </p>
+                    <p
+                      className="mt-2 text-2xl"
+                      style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+                    >
+                      {batch.photoCount}
+                    </p>
+                  </div>
 
-              <div>
-                <p
-                  className="text-sm uppercase tracking-[0.18em]"
-                  style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
-                >
-                  Current photo
-                </p>
-                <p
-                  className="mt-2 break-all text-base"
-                  style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
-                >
-                  {activePhoto.fileName}
-                </p>
+                  <div className="rounded-[1.5rem] bg-stone-50 px-5 py-4">
+                    <p
+                      className="text-xs uppercase tracking-[0.22em]"
+                      style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                    >
+                      Current
+                    </p>
+                    <p
+                      className="mt-2 text-2xl"
+                      style={{ fontFamily: "'Playfair Display', serif", color: '#2d2926' }}
+                    >
+                      {activeIndex + 1}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-[1.5rem] bg-stone-50 px-5 py-4">
+                  <p
+                    className="text-xs uppercase tracking-[0.22em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                  >
+                    Current filename
+                  </p>
+                  <p
+                    className="mt-2 break-all text-sm leading-7"
+                    style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
+                  >
+                    {activePhoto.fileName}
+                  </p>
+                </div>
+
+                <div className="rounded-[1.5rem] border border-stone-200 bg-white px-5 py-4">
+                  <p
+                    className="text-xs uppercase tracking-[0.22em]"
+                    style={{ fontFamily: "'Lora', serif", color: '#8b6f47' }}
+                  >
+                    Navigation tips
+                  </p>
+                  <p
+                    className="mt-3 text-sm leading-7"
+                    style={{ fontFamily: "'Lora', serif", color: '#5a5a5a' }}
+                  >
+                    Swipe on mobile, use the left and right arrow keys on desktop, or select a frame from the filmstrip below the image.
+                  </p>
+                </div>
               </div>
             </div>
           </aside>
